@@ -9,6 +9,11 @@ interface PreviewModalProps {
   onClose: () => void;
 }
 
+   function replaceWithBr(text: string): string {
+    return text.replace(/\n/g, "<br />");
+  }
+
+
 const PreviewModal: React.FC<PreviewModalProps> = ({ isOpen, title, imageSrc, textDescription, onClose }) => {
  
   if (!isOpen) return null;
@@ -37,7 +42,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ isOpen, title, imageSrc, te
             />
           </div>
           <div className="text-justify overscroll-container max-h-48 overflow-y-auto">
-            <p>{textDescription}</p>
+            <p dangerouslySetInnerHTML={{ __html: replaceWithBr(textDescription || "") }}></p>
           </div>
         </div>
 

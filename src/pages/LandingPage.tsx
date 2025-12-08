@@ -95,8 +95,6 @@ useEffect(() => {
       setTimeout(() => setIsTransitioning(false), 500);
     };
   
-
-  
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
@@ -216,7 +214,7 @@ useEffect(() => {
                 <SquareGantt className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">{t('landing.services.subtitle1')}</h3>
-              <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" onClick={() => setIsAdvModalOpen(true)}>
+              <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" style={{ marginTop: '56px' }} onClick={() => setIsAdvModalOpen(true)}>
                 <div className="flex items-center justify-center">
                   Saber Más
                   <ArrowRight className="w-5 h-5" />
@@ -242,7 +240,7 @@ useEffect(() => {
                 <Shovel className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">{t('landing.services.subtitle3')}</h3>
-              <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" onClick={() => setIsRemodelingModalOpen(true)}>
+              <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"  style={{ marginTop: '26px' }} onClick={() => setIsRemodelingModalOpen(true)}>
                 <div className="flex items-center justify-center">
                   Saber Más
                   <ArrowRight className="w-5 h-5" />
@@ -257,7 +255,7 @@ useEffect(() => {
                 <AppWindow className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">{t('landing.services.subtitle4')}</h3>
-              <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" onClick={() => setIsOnlineModalOpen(true)}>
+              <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" style={{ marginTop: '26px' }} onClick={() => setIsOnlineModalOpen(true)}>
                 <div className="flex items-center justify-center">
             Saber Más
                   <ArrowRight className="w-5 h-5" />
@@ -283,7 +281,7 @@ useEffect(() => {
                 <BadgeDollarSign className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">{t('landing.services.subtitle6')}</h3>
-              <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" onClick={() => setIsControlModalOpen(true)}>
+              <button className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" style={{ marginTop: '26px' }} onClick={() => setIsControlModalOpen(true)}>
                 <div className="flex items-center justify-center">
                  Saber Más
                   <ArrowRight className="w-5 h-5" />
@@ -484,7 +482,7 @@ useEffect(() => {
       </footer>
 
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
-      <PreviewModal isOpen={isAdvModalOpen} title={t('landing.services.subtitle1')} imageSrc={management} textDescription={t('landing.services.description1ext')} onClose={() => setIsAdvModalOpen(false)} />
+      <PreviewModal isOpen={isAdvModalOpen} title={t('landing.services.subtitle1')} imageSrc={management} textDescription={t('landing.services.description1')} onClose={() => setIsAdvModalOpen(false)} />
       <PreviewModal isOpen={isNewModalOpen} title={t('landing.services.subtitle2')} imageSrc={development} textDescription={t('landing.services.description2')} onClose={() => setIsNewModalOpen(false)} />
       <PreviewModal isOpen={isRemodelingModalOpen} title={t('landing.services.subtitle3')} imageSrc={construction} textDescription={t('landing.services.description3')} onClose={() => setIsRemodelingModalOpen(false)} />
       <PreviewModal isOpen={isOnlineModalOpen} title={t('landing.services.subtitle4')} imageSrc={onlinePlatform} textDescription={t('landing.services.description4')} onClose={() => setIsOnlineModalOpen(false)} />

@@ -308,7 +308,7 @@ const translations = {
     
     // Landing Page
     'landing.hero.title': 'NLH - Nosotros Lo Hacemos',
-    'landing.hero.subtitle': 'Asesorias y Gestión de Proyectos - Desarrollo de Proyectos - Construcción, Remodelación y Habilitaciones',
+    'landing.hero.subtitle': 'Asesoría y Gestión de Proyectos - Desarrollo de Proyectos - Construcción, Remodelación y Habilitaciones',
     'landing.hero.subtitle2': 'Plataforma Online - Gestión de Licitaciones y Presupuestos - Control de Obras',
     'landing.services.title': 'Nuestros Servicios',
     
@@ -336,67 +336,22 @@ Por favor, indícanos:
     
     // Landing Page About Section
     'landing.about.title': 'Acerca de Nosotros',
-    'landing.about.description': 'Somos una empresa con 15 años de experiencia en Santiago y Regiones, lo que nos ha convertido en una solución real para nuestros clientes, tanto en los servicios de construcción, remodelación y habilitación, como en la gestión y asesoría, todo esto con un importante apoyo de nuestra plataforma WEB on-line, que facilita procesos de licitación, inspección y colaboración, control y seguimiento de proyectos, etc. manteniendo la información al alcancde de todos, en cualquier lugar y en todo momento.',
+    'landing.about.description': 'Somos una empresa con 15 años de experiencia en Santiago y Regiones, lo que nos ha convertido en una solución real para nuestros clientes, tanto en los servicios de construcción, remodelación y habilitación, como en la gestión y asesoría, todo esto con un importante apoyo de nuestra plataforma WEB on-line, que facilita procesos de licitación, inspección y colaboración, control y seguimiento de proyectos, etc. manteniendo la información al alcance de todos, en cualquier lugar y en todo momento.',
     'landing.about.team' : 'Equipo de Expertos',
     
     // Lading Page Services Section
     'landing.services.subtitle1': 'Asesoría y Gestión de Proyectos',
-    'landing.services.description1': 'Proporciona orientación experta y supervisión durante todo el ciclo de vida del proyecto, desde el concepto inicial hasta la finalización.',
-    'landing.services.description1ext': `Ofrecemos un servicio integral de asesoría y gestión diseñado para lograr optimizar desde la planificación inicial hasta
-la entrega final de un proyecto, poniendo enfasis en puntos relevantes necesarios para cumplir objetivos tales como:
-Supervisión y control: Monitoreamos de cerca la ejecución del proyecto, asegurando que se cumplan
-los estándares de calidad y los plazos establecidos.
-Coordinación de equipos: Actuamos como un puente de comunicación entre todas las partes involucradas
-(proveedores, contratistas, etc.) y así generar una colaboración fluida.
-Optimización de recursos: Buscamos la manera más eficiente de utilizar tu presupuesto con los distintos profesionales
-y equipos que formaran parte del proyecto.
-Reportes y comunicacion: Te mantenemos informado con informes claros y periódicos sobre el avance
-y los indicadores claves del proyecto.
-Control total: Te proporcionamos la visibilidad y el control que necesitas sobre el progreso, los recursos y los riesgos de tu proyecto.
-La gestión exitosa de un proyecto requiere más que solo una buena idea.
-Requiere una planificación meticulosa, una ejecución rigurosa y un control constante.
-Con nuestra experiencia, convertimos lo que puede ser complejo para algunos,
-en un proceso claro y controlado para establecer bases sólidas desde el inicio.`,
+    'landing.services.description1': `Ofrecemos un servicio integral de asesoría y gestión diseñado para lograr optimizar desde la planificación inicial hasta la entrega final de un proyecto, poniendo enfasis en puntos relevantes necesarios para cumplir objetivos tales como:\n\n  Supervisión y control: Monitoreamos de cerca la ejecución del proyecto, asegurando que se cumplan los estándares de calidad y los plazos establecidos. \n\n  Coordinación de equipos: Actuamos como un puente de comunicación entre todas las partes involucradas (proveedores, contratistas, etc.) y así generar una colaboración fluida.\n\n  Optimización de recursos: Buscamos la manera más eficiente de utilizar tu presupuesto con los distintos profesionales y equipos que formaran parte del proyecto.\n\n  Reportes y comunicacion: Te mantenemos informado con informes claros y periódicos sobre el avance y los indicadores claves del proyecto.\n\n  Control total: Te proporcionamos la visibilidad y el control que necesitas sobre el progreso, los recursos y los riesgos de tu proyecto.\n\n  La gestión exitosa de un proyecto requiere más que solo una buena idea.\n  Requiere una planificación meticulosa, una ejecución rigurosa y un control constante.\n\n  Con nuestra experiencia, convertimos lo que puede ser complejo para algunos, en un proceso claro y controlado para establecer bases sólidas desde el inicio.`,
     'landing.services.subtitle2': 'Desarrollo de Proyectos, Arquitectura, Ingeniería y Especialidades',
-    'landing.services.description2': `Contamos con un equipo de profesionales con basta experiencia en arquitectura, ingeniería y especialidades, y así nos aseguramos de que su visión se haga realidad con eficiencia y calidad en cada proyecto.
-Combinamos la creatividad arquitectónica con la precisión de la ingeniería, para ofrecer soluciones integrales de diseño y construcción que no solo cumplen, sino que superan las expectativas.
-Con años de experiencia y un enfoque en la calidad y sostenibilidad, diseñamos y ejecutamos soluciones en conjunto con nuestros clientes para crear espacios que no solo son estéticamente atractivos, sino también funcionales.`,
+    'landing.services.description2': `Contamos con un equipo de profesionales con basta experiencia en arquitectura, ingeniería y especialidades, y así nos aseguramos de que su visión se haga realidad con eficiencia y calidad en cada proyecto.\n\nCombinamos la creatividad arquitectónica con la precisión de la ingeniería, para ofrecer soluciones integrales de diseño y construcción que no solo cumplen, sino que superan las expectativas.\n\nCon años de experiencia y un enfoque en la calidad y sostenibilidad, diseñamos y ejecutamos soluciones en conjunto con nuestros clientes para crear espacios que no solo son estéticamente atractivos, sino también funcionales.`,
     'landing.services.subtitle3': 'Construcción, Remodelación y Habilitación',
-    'landing.services.description3': `Te apoyamos en la concreción de tus proyectos, gestionando y desarrollando obras de construcción para los proyectos corporativos que tu empresa necesita, abordando Obras Civiles, Estructurales, Eléctricas, Climatización, Redes, Seguridad, Sanitario, Mobiliario, etc.
-Ejecutamos proyectos de Remodelación y Habilitación, tanto para locales comerciales como oficinas corporativas, considerando todas las especialidades que forman parte de un proyecto, de manera que puedan potenciar tu productividad, optimizar tu flujo de trabajo y proyectar una imagen profesional y moderna.` ,
+    'landing.services.description3': `Te apoyamos en la concreción de tus proyectos, gestionando y desarrollando obras de construcción para los proyectos corporativos que tu empresa necesita, abordando Obras Civiles, Estructurales, Eléctricas, Climatización, Redes, Seguridad, Sanitario, Mobiliario, etc.\n\nEjecutamos proyectos de Remodelación y Habilitación, tanto para locales comerciales como oficinas corporativas, considerando todas las especialidades que forman parte de un proyecto, de manera que puedan potenciar tu productividad, optimizar tu flujo de trabajo y proyectar una imagen profesional y moderna.`,
     'landing.services.subtitle4': 'Plataforma Online',
-    'landing.services.description4': `En NLH creamos nuestra plataforma On Line para que sea una herramienta practica, útil y sencilla, que facilite no solo procesos de licitación, sino que también permita llevar el control y seguimiento de tus proyectos a través de servicios de inspección técnica (ITO) y Control de Obras, manteniendo la información al alcance de todos, en cualquier lugar y en todo momento.
-Buscamos una real interacción
-con nuestros clientes, y la de ellos con sus
-proveedores,
-respondiendo y aclarando On Line en cualquier momento, para así garantizar que disminuyan los retrasos, se cumplan los plazos establecidos y todo con total transparencia.
-La Plataforma ofrece:
-- Subida y descarga de archivos.
-- Portal de Consultas y Respuestas.
-- Seguimiento en tiempo real: control, notificaciones, aclaraciones, etc.
-- Documentos e Historial del proyecto cuando sea requerido.
-- Soporte 24/7 mientras el proyecto este activo.
-- Reportes finales de cada proceso desarrollado.`,
+    'landing.services.description4': `En NLH creamos nuestra plataforma On Line para que sea una herramienta practica, útil y sencilla, que facilite no solo procesos de licitación, sino que también permita llevar el control y seguimiento de tus proyectos a través de servicios de inspección técnica (ITO) y Control de Obras, manteniendo la información al alcance de todos, en cualquier lugar y en todo momento.\n\nBuscamos una real interacción con nuestros clientes, y la de ellos con sus proveedores, respondiendo y aclarando On Line en cualquier momento, para así garantizar que disminuyan los retrasos, se cumplan los plazos establecidos y todo con total transparencia.\n\nLa Plataforma ofrece:\n- Subida y descarga de archivos.\n- Portal de Consultas y Respuestas.\n- Seguimiento en tiempo real: control, notificaciones, aclaraciones, etc.\n- Documentos e Historial del proyecto cuando sea requerido.\n- Soporte 24/7 mientras el proyecto este activo.\n- Reportes finales de cada proceso desarrollado.`,
     'landing.services.subtitle5': 'Gestión de Licitaciones y Presupuestos',
-    'landing.services.description5': `En el dinámico entorno empresarial actual, la eficiencia y la reducción de costos son cruciales para mantener la competitividad. Es por eso que creamos una solución integral para digitalizar y optimizar sus procesos de adquisición y licitación. Esta herramienta de e-procurement le permite gestionar sus procesos de manera electrónica, segura y transparente, permitiendo:
-Ahorrar tiempo y recursos: Agilice la elaboración y gestión de sus procesos de licitación.
-Garantizar transparencia: Asegure un proceso justo y auditable con registro completo del historial de cada licitación.
-Ampliar su red de proveedores: Conecte con una comunidad más amplia de proveedores, fomentando la competitividad y obteniendo mejores condiciones de precio-calidad.
-Tomar decisiones informadas: Acceda a datos y métricas para evaluar propuestas y seleccionar la oferta más conveniente.`,
+    'landing.services.description5': `En el dinámico entorno empresarial actual, la eficiencia y la reducción de costos son cruciales para mantener la competitividad. Es por eso que creamos una solución integral para digitalizar y optimizar sus procesos de adquisición y licitación. Esta herramienta de e-procurement le permite gestionar sus procesos de manera electrónica, segura y transparente, permitiendo:\n\nAhorrar tiempo y recursos: Agilice la elaboración y gestión de sus procesos de licitación.\n\nGarantizar transparencia: Asegure un proceso justo y auditable con registro completo del historial de cada licitación.\n\nAmpliar su red de proveedores: Conecte con una comunidad más amplia de proveedores, fomentando la competitividad y obteniendo mejores condiciones de precio-calidad.\n\nTomar decisiones informadas: Acceda a datos y métricas para evaluar propuestas y seleccionar la oferta más conveniente.`,
     'landing.services.subtitle6': 'Control de Obras',
-    'landing.services.description6': `Durante estos 15 años con experiencia en distintos proyectos de Construcción, hemos logrado ganar la confianza de nuestros clientes en servicios de Inspección Técnica y Control de Obras, ya que nuestra mirada imparcial, rigurosa y proactiva nos permite tomar decisiones informadas, minimizar riesgos, evitar
-sobrecostos, retrasos y vicios ocultos.
-Ofrecemos un servicio integral de control y supervisión de obras con apoyo permanente de nuestra
-Plataforma On Line, diseñado para brindarle transparencia, eficiencia y mejor visibilidad a cada proyecto.
-Realizamos entre otras actividades:|
-- Supervisión técnica continua en obra, con inspecciones programadas y no programadas.
-- Verificación del cumplimiento de planos, especificaciones técnicas y normativas vigentes
-- Control de avances físicos y cronogramas: seguimiento real vs. planificado
-- Gestión y evaluación de la calidad de materiales y mano de obra
-- Control de costos: detección temprana de desviaciones presupuestarias
-- Emisión de informes técnicos periódicos con hallazgos, recomendaciones y fotografías
-- Coordinación con contratistas, inspectores y autoridades competentes
-- Apoyo en la recepción final y levantamiento de observaciones`,
+    'landing.services.description6': `Durante estos 15 años con experiencia en distintos proyectos de Construcción, hemos logrado ganar la confianza de nuestros clientes en servicios de Inspección Técnica y Control de Obras, ya que nuestra mirada imparcial, rigurosa y proactiva nos permite tomar decisiones informadas, minimizar riesgos, evitar\nsobre costos, retrasos y vicios ocultos.\n\nOfrecemos un servicio integral de control y supervisión de obras con apoyo permanente de nuestra\nPlataforma On Line, diseñado para brindarle transparencia, eficiencia y mejor visibilidad a cada proyecto.\n\nRealizamos entre otras actividades:\n- Supervisión técnica continua en obra, con inspecciones programadas y no programadas.\n- Verificación del cumplimiento de planos, especificaciones técnicas y normativas vigentes\n- Control de avances físicos y cronogramas: seguimiento real vs. planificado\n- Gestión y evaluación de la calidad de materiales y mano de obra\n- Control de costos: detección temprana de desviaciones presupuestarias\n- Emisión de informes técnicos periódicos con hallazgos, recomendaciones y fotografías\n- Coordinación con contratistas, inspectores y autoridades competentes\n- Apoyo en la recepción final y levantamiento de observaciones`,
     
     // Login
     'login.title': 'Iniciar Sesión en tu Cuenta',
