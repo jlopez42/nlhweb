@@ -1,6 +1,7 @@
-import { Project, ProjectFile, Question } from '../types';
+import { Project, ProjectFile, ProjectType, Question } from '../types';
 import { mockProjects, mockProjectFiles, mockQuestions, mockQuestionsSpanish } from '../data/mockData';
-import { getAllProjects, getProjectById} from '../api/projectApi';
+import ProjectsService from '../middleware/services/projects.service';
+import ProjectTypesService from '../middleware/services/projectTypes.service';
 import { util } from '../common';
 
 export const projectService = {
@@ -8,16 +9,15 @@ export const projectService = {
   getProjects: async (): Promise<Project[]> => {
     return new Promise((resolve) => {    
       setTimeout(async () => {
-        const response = await getAllProjects();
-        console.log('Fetched projects:', response.data);
-        console.log('Processed projects:', util.processProjects(response.data));
-        resolve([...util.processProjects(response.data)]);
+        const response = await new ProjectsService().getAllProjects();
+        resolve([...util.processProjects(response)]);
       }, 500);
     });
   },
 
   // Get projects by user ID
   getProjectsByUserId: async (userId: string): Promise<Project[]> => {
+    console.log('Getting projects for user ID:', userId);
     return new Promise((resolve) => {
       setTimeout(() => {
         const userProjects = mockProjects.filter(p => p.userId == userId);
@@ -27,17 +27,13 @@ export const projectService = {
   },
 
   // Get project by ID
-  getProjectById: async (id: string): Promise<Project | null> => {
+  getProjectById: async (id: string) => {
+    console.log('Fetching project with ID:', id);
     return new Promise((resolve) => {
       setTimeout(async () => {
-      const project = await getProjectById(id);
-        const processedProjects = util.processProjects(project.data);
-        console.log('Fetched project by ID:', project.data);
-        console.log('Processed project by ID:', processedProjects);
-        resolve(processedProjects.length > 0 ? processedProjects[0] : null);
-        //const foundProject = mockProjects.find(p => p.id === id) || null;
-        //resolve(foundProject);  
-      }, 300);
+        const response = await new ProjectsService().getProject(id);
+        resolve(response);
+      }, 500);
     });
   },
 
@@ -59,15 +55,11 @@ export const projectService = {
 
   // Update project
   updateProject: async (id: string, updates: Partial<Project>): Promise<Project | null> => {
+    console.log('Updating project ID:', id, 'with updates:', updates);
     return new Promise((resolve) => {
-      setTimeout(() => {
-        const index = mockProjects.findIndex(p => p.id === id);
-        if (index !== -1) {
-          mockProjects[index] = { ...mockProjects[index], ...updates, updatedAt: new Date() };
-          resolve(mockProjects[index]);
-        } else {
-          resolve(null);
-        }
+      setTimeout(async () => {
+        const project = await new ProjectsService().updateProject(id, updates);
+        resolve(project || null);
       }, 600);
     });
   },
@@ -118,21 +110,30 @@ export const projectService = {
   },
 
   // Associate file with project (for new projects)
-  associateFileWithProject: async (projectId: string, fileData: ProjectFile): Promise<ProjectFile> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const updatedFile = { ...fileData, projectId };
-        const existingIndex = mockProjectFiles.findIndex(f => f.id === fileData.id);
-        
-        if (existingIndex !== -1) {
-          mockProjectFiles[existingIndex] = updatedFile;
-        } else {
-          mockProjectFiles.push(updatedFile);
-        }
-        
-        resolve(updatedFile);
-      }, 300);
+  associateFileWithProject: async (projectId: string, file: any) => {
+    const form = new FormData();
+
+    // file.file_content may be a File, a Blob, or an object with .data
+    if (file.file_content instanceof File) {
+      form.append("file", file.file_content, file.originalName || file.filename);
+    } else if (file.file_content?.data) {
+      const blob = new Blob([file.file_content.data], { type: file.mime_type || "application/octet-stream" });
+      form.append("file", blob, file.originalName || file.filename);
+    }
+
+    // metadata
+    if (file.originalName) form.append("originalName", file.originalName);
+    if (file.filename) form.append("filename", file.filename);
+    if (file.mime_type) form.append("mime_type", file.mime_type);
+    if (file.uploadedBy) form.append("uploadedBy", file.uploadedBy);
+
+    const res = await fetch(`/api/projects/${projectId}/files`, {
+      method: "POST",
+      body: form,
     });
+
+    if (!res.ok) throw new Error("Failed to associate file with project");
+    return res.json();
   },
 
   // Delete file
@@ -193,5 +194,30 @@ export const projectService = {
         }
       }, 400);
     });
+  },
+
+  // New: fetch global customers pool
+  getCustomersByProjectId: async (projectId: string) => {
+    const res = await fetch(`/api/projects/${projectId}/customers`);
+    if (!res.ok) {
+      throw new Error("Failed to load customers for project");
+    }
+    return res.json();
+  },
+
+  // ... Additional project-related services can be added here
+  // e.g., assignTeamMembers, setDeadlines, etc.
+  // ...
+
+  // Populate select options for projectType field
+  getProjectTypes: async (): Promise<ProjectType[]> => {
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const options = await new ProjectTypesService().getAllProjectTypes();
+        console.log("Fetched project types:", options);
+        resolve(options);
+      }, 200);
+    });
   }
+  
 };

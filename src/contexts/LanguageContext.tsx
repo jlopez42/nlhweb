@@ -30,7 +30,7 @@ const translations = {
     'landing.contact.submit': 'Send Message',
     'landing.contact.phone': 'Phone',
     'landing.contact.phone.number': '+56 9 8866-9996',
-    'landing.contact.email.address': 'contact@nlh.com',
+    'landing.contact.email.address': 'contact@nlh.cl',
     'landing.contact.whatsapp': 'WhatsApp',
     'landing.contact.whatsapp.number': 'Number: +56 9 8866-9996',
     
@@ -41,17 +41,17 @@ const translations = {
 
     // Landing Page Services Section
     'landing.services.subtitle1': 'Project Advisory and Management',
-    'landing.services.description1': 'Provides expert guidance and oversight throughout the entire project lifecycle, from initial concept to completion.',
+    'landing.services.description1': 'We offer a comprehensive advisory and management service designed to optimize everything from initial planning to final project delivery, emphasizing key points necessary to meet objectives such as:\n\n  Supervision and control: We closely monitor project execution, ensuring that quality standards and established deadlines are met. \n\n  Team coordination: We act as a communication bridge between all parties involved (suppliers, contractors, etc.) to generate smooth collaboration.\n\n  Resource optimization: We seek the most efficient way to utilize your budget with the various professionals and teams that will be part of the project.\n\n  Reporting and communication: We keep you informed with clear and periodic reports on project progress and key indicators.\n\n  Total control: We provide you with the visibility and control you need over your project\'s progress, resources, and risks.\n\n  Successful project management requires more than just a good idea.\n  It requires meticulous planning, rigorous execution, and constant control.\n\n  With our experience, we turn what can be complex for some into a clear and controlled process to establish solid foundations from the start.',
     'landing.services.subtitle2': 'Project Development, Architecture, Engineering, and Specialties',
-    'landing.services.description2': 'This includes everything from initial planing and site preparation to the final touches and projects handover.',
+    'landing.services.description2': 'We provide comprehensive project development services, including architectural design, engineering solutions, and specialized technical expertise.',
     'landing.services.subtitle3': 'Construction, Remodeling, and Tenant Improvements',
-    'landing.services.description3': 'Transform existing spaces to meet new needs, improve functionality, or update aesthetics.',
+    'landing.services.description3': 'We support you in the realization of your projects, managing and developing construction works for the corporate projects your company needs, addressing Civil Works, Structural, Electrical, Air Conditioning, Networks, Security, Sanitary, Furniture, etc.\n\nWe execute Remodeling and Tenant Improvement projects, both for commercial premises and corporate offices, considering all the specialties that are part of a project, so that they can enhance your productivity, optimize your workflow, and project a professional and modern image.',
     'landing.services.subtitle4': 'Online Platform',
-    'landing.services.description4': 'A centralized, cloud-based solution that digitizes and streamlines a company\'s entire project workflow.',
+    'landing.services.description4': 'At NLH we created our Online Platform to be a practical, useful, and simple tool that facilitates not only bidding processes but also allows you to take control and monitor your projects through technical inspection (ITO) and Project Control services, keeping the information within everyone\'s reach, anywhere and at any time.\n\nWe seek real interaction with our clients, and theirs with their suppliers, responding and clarifying Online at any time, to ensure that delays are reduced, deadlines are met, all with total transparency.\n\nThe Platform offers:\n- File upload and download.\n- Q&A Portal.\n- Real-time tracking: control, notifications, clarifications, etc.\n- Documents and Project History when required.\n- 24/7 support while the project is active.\n- Final reports for each process developed.',
     'landing.services.subtitle5': 'Tender and Budget Management',
-    'landing.services.description5': 'Comprehensive management of the tendering process, from preparing and issuing tender documents to evaluating bids and awarding contracts.',
+    'landing.services.description5': 'Comprehensive management of the tendering process, from preparing and issuing tender documents to evaluating bids and awarding contracts.\n\nIn today\'s dynamic business environment, efficiency and cost reduction are crucial to maintaining competitiveness. That is why we created a comprehensive solution to digitize and optimize your procurement and tendering processes. This e-procurement tool allows you to manage your processes electronically, securely, and transparently, enabling:\n\nSaving time and resources: Streamline the preparation and management of your tendering processes.\n\nEnsuring transparency: Ensure a fair and auditable process with a complete record of each tender\'s history.\n\nExpanding your supplier network: Connect with a broader community of suppliers, fostering competitiveness and obtaining better price-quality conditions.\n\nMaking informed decisions: Access data and metrics to evaluate proposals and select the most convenient offer.',
     'landing.services.subtitle6': 'Project Control',
-    'landing.services.description6': 'A systematics approach to managing and monitoring a project\'s performance to ensure it stays on budget and schedule.',
+    'landing.services.description6': 'During these 15 years of experience in various Construction projects, we have gained the trust of our clients in Technical Inspection and Project Control services, as our impartial, rigorous, and proactive approach allows us to make informed decisions, minimize risks, avoid cost overruns, delays, and hidden defects.\n\nWe offer a comprehensive project control and supervision service with permanent support from our Online Platform, designed to provide you with transparency, efficiency, and better visibility for each project.\n\nWe carry out, among other activities:\n- Continuous technical supervision on-site, with scheduled and unscheduled inspections.\n- Verification of compliance with plans, technical specifications, and current regulations\n- Control of physical progress and schedules: actual vs. planned monitoring\n- Management and evaluation of material and workmanship quality\n- Cost control: early detection of budget deviations\n- Issuance of periodic technical reports with findings, recommendations, and photographs\n- Coordination with contractors, inspectors, and competent authorities\n- Support in final acceptance and observation lifting',
 
     
     // Login
@@ -128,10 +128,10 @@ const translations = {
     'project.detail.enclosure': 'Enclosure',
 
     // Project Select Type
-    'project.select.commercial': 'Commercial',
-    'project.select.residential': 'Residential',
-    'project.select.industrial': 'Industrial',
-    'project.select.infrastructure': 'Infrastructure',
+    'project.select.commercial': 'Licensing',
+    'project.select.residential': 'Budget',
+    'project.select.industrial': 'Project Control',
+    'project.select.infrastructure': 'Storage',
 
     // Project Officer Section
     'project.officer.title': 'Responsible Parties',
@@ -139,12 +139,22 @@ const translations = {
     'project.officer.principal2': 'Principal 2',
     'project.officer.professional': 'Professionals',
     'project.officer.professional.add': 'Add Professional',
+    'project.officer.professional.placeholder': 'Professional role/title',
     'project.officer.specialist': 'Specialists',
     'project.officer.specialist.add': 'Add Specialist',
+    'project.officer.specialist.placeholder': 'Specialist role/title',
     'project.officer.contact': 'Contact',
+
+    // Project Customer Linked Section
+    'project.customer.title': 'Customers Associated',
+    'project.customer.search.title': 'Search Registered Customers',
+    'project.customer.search.filter': 'Find customer by name...',
+    'project.customer.linked.title': 'Linked To Project',
+    'project.customer.no.linked': 'No Customers linked yet.',
 
     // Project Addionally Section
     'project.addition.title': 'Additional Information',
+    'project.addition.title.placeholder': 'Additional Project Description',
     'project.addition.user': 'User',
     'project.addition.binding': 'Binding',
 
@@ -152,7 +162,7 @@ const translations = {
     'project.deadline.date': 'Project Dates',
     'project.deadline.publication': 'Publication Date',
     'project.deadline.start': 'Start Date',
-    'project.deadline.end': 'Finish Date',
+    'project.deadline.end': 'End Date',
     
     'project.deadline.limits': 'Project Limits',
     'project.deadline.offers': 'Offers Limit',
@@ -269,6 +279,7 @@ const translations = {
     'project.setting.user.table.role': 'Role',
     'project.setting.user.table.username': 'Company',
     'project.setting.user.table.actions': 'Actions',
+    'project.setting.user.delete.confirmation': 'Are you sure you want to delete this user? This action cannot be undone.',
 
     // Setting Project Template
     'project.setting.template.title': 'Project Templates',
@@ -320,19 +331,19 @@ const translations = {
     'landing.contact.submit': 'Enviar Mensaje',
     'landing.contact.phone': 'Teléfono',
     'landing.contact.phone.number': '+56 9 8866-9996',
-    'landing.contact.email.address': 'contacto@nlh.com',
+    'landing.contact.email.address': 'contacto@nlh.cl',
     'landing.contact.whatsapp': 'WhatsApp',
     'landing.contact.whatsapp.number': 'Número: +56 9 8866-9996',
-    'landing.contact.whatsapp.link': 'https://wa.me/+56981805075?text=',
+    'landing.contact.whatsapp.link': 'https://wa.me/+56988669996?text=',
     'landing.contact.whatsapp.text': `Hola 👋, somos NLH,¡Gracias por contactarnos!
-Estamos aquí para resolver tus dudas, brindarte información o atender tu
-solicitud lo antes posible.
+     Estamos aquí para resolver tus dudas, brindarte información o atender tu
+     solicitud lo antes posible.
 
-Por favor, indícanos:
-🔹 Tu nombre
-🔹 Lo que necesitas
+     Por favor, indícanos:
+     🔹 Tu nombre
+     🔹 Lo que necesitas
 
-¡Estaremos encantados de ayudarte! 😊`,
+      ¡Estaremos encantados de ayudarte! 😊`,
     
     // Landing Page About Section
     'landing.about.title': 'Acerca de Nosotros',
@@ -363,7 +374,7 @@ Por favor, indícanos:
     
     // Dashboard
     'dashboard.profile': 'Perfil',
-    'dashboard.projects': 'GESTION DE PROYECTOS',
+    'dashboard.projects': 'PLATAFORMA ONLINE NLH',
     'dashboard.license': 'Licitación',
     'dashboard.settings': 'Configuración',
     'dashboard.logout': 'Cerrar Sesión',
@@ -427,10 +438,10 @@ Por favor, indícanos:
     'project.detail.enclosure': 'Recinto',
 
     // Project Select Type
-    'project.select.commercial': 'Commercial',
-    'project.select.residential': 'Residential',
-    'project.select.industrial': 'Industrial',
-    'project.select.infrastructure': 'Infrastructure',
+    'project.select.commercial': 'Licitación',
+    'project.select.residential': 'Presupuesto',
+    'project.select.industrial': 'Control de Obra',
+    'project.select.infrastructure': 'Almacenamiento',
 
     // Project Officer Section
     'project.officer.title': 'Responsables',
@@ -438,12 +449,22 @@ Por favor, indícanos:
     'project.officer.principal2': 'Mandante 2',
     'project.officer.professional': 'Profesional',
     'project.officer.professional.add': '+',
+    'project.officer.professional.placeholder': 'Rol/Título profesional',
     'project.officer.specialist': 'Especialista',
     'project.officer.specialist.add': '+',
+    'project.officer.specialist.placeholder': 'Rol/Título especialista',
     'project.officer.contact': 'Contacto',
 
+    // Project Customer Linked Section
+    'project.customer.title': 'Usuarios Asociados',
+    'project.customer.search.title': 'Buscar Usuarios Registrados',
+    'project.customer.search.filter': 'Filtar por nombre...',
+    'project.customer.linked.title': 'Usuarios Vinculados',
+    'project.customer.no.linked': 'No hay usuarios asociados al proyecto.',
+    
     // Project Addionally Section
     'project.addition.title': 'Información Adicional',
+    'project.addition.title.placeholder': 'Descripción Adicional del Proyecto',
     'project.addition.user': 'Cliente',
     'project.addition.binding': 'Licitación',
 
@@ -451,7 +472,7 @@ Por favor, indícanos:
     'project.deadline.date': 'Fechas del proyecto',
     'project.deadline.publication': 'Fecha de publicación',
     'project.deadline.start': 'Fecha de inicio',
-    'project.deadline.end': 'Fecha de finalización',
+    'project.deadline.end': 'Fecha de Termino',
     
     'project.deadline.limits': 'Límites del proyecto',
     'project.deadline.offers': 'Límite de ofertas',
@@ -560,13 +581,14 @@ Por favor, indícanos:
     'project.setting.user.role': 'Rol',
     'project.setting.user.administrator': 'Administrador',
     'project.setting.user.customer': 'Cliente',
-    'project.setting.user.provider': 'Provedor',
+    'project.setting.user.provider': 'Proveedor',
     'project.setting.user.professional': 'Profesional',
 
     'project.setting.user.table.user': 'Usuario',
     'project.setting.user.table.role': 'Rol',
     'project.setting.user.table.username': 'Nombre de Empresa',
     'project.setting.user.table.actions': 'Acciones',
+    'project.setting.user.delete.confirmation': 'Esta seguro que desea eliminar este usuario? Esta acción no puede ser deshecha',
 
     // Setting Project Template
     'project.setting.template.title': 'Plantillas de proyectos',

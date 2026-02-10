@@ -3,7 +3,6 @@ export const util = {
     processProjects(data: any[]) {
         // Usamos un Map para agrupar los objetos por ID
         const groupedData = new Map();
-
         data.forEach(item => {
             const { id, name, role, ...commonData } = item;
 

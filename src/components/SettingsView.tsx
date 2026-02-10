@@ -7,11 +7,13 @@ import { mockUsers } from '../data/mockData';
 
 const SettingsView: React.FC = () => {
   const { user } = useAuth();
+  console.log('Current User in SettingsView:', user);
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'users' | 'templates' | 'backup'>('users');
   const [users, setUsers] = useState<User[]>(mockUsers);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [newUser, setNewUser] = useState({
     username: '',
     password: '',
@@ -32,6 +34,7 @@ const SettingsView: React.FC = () => {
 
   const handleDeleteUser = (userId: string) => {
     setUsers(users.filter(u => u.id !== userId));
+    setDeleteConfirm(null);
   };
 
   const tabs = [
@@ -107,48 +110,50 @@ const SettingsView: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {users.map((user) => (
-                  <tr key={user.id}>
+                {users.map((userRow) => (
+                  <tr key={userRow.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 flex items-center justify-center">
-                          <span className="text-white font-medium">{user.name.charAt(0)}</span>
+                          <span className="text-white font-medium">{userRow.name.charAt(0)}</span>
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                          <div className="text-sm text-gray-500">{user.email}</div>
+                          <div className="text-sm font-medium text-gray-900">{userRow.name}</div>
+                          <div className="text-sm text-gray-500">{userRow.email}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 text-xs font-medium rounded-full capitalize ${
-                        user.role === 'administrator' ? 'bg-purple-100 text-purple-800' :
-                        user.role === 'customer' ? 'bg-blue-100 text-blue-800' :
+                        userRow.role === 'administrator' ? 'bg-purple-100 text-purple-800' :
+                        userRow.role === 'customer' ? 'bg-blue-100 text-blue-800' :
                         'bg-green-100 text-green-800'
                       }`}>
-                        {user.role}
+                        {userRow.role}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {user.username}
+                      {userRow.username}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
                         <button
                           onClick={() => {
-                            setEditingUser(user);
+                            setEditingUser(userRow);
                             setIsUserModalOpen(true);
                           }}
                           className="text-indigo-600 hover:text-indigo-900"
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className="h-5 w-5" />
                         </button>
-                        <button
-                          onClick={() => handleDeleteUser(user.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        {user?.role === 'administrator' && (
+                          <button
+                            onClick={() => setDeleteConfirm(userRow.id)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="h-5 w-5" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -156,6 +161,32 @@ const SettingsView: React.FC = () => {
               </tbody>
             </table>
           </div>
+
+          {/* Delete Confirmation Modal */}
+          {deleteConfirm && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg p-6 max-w-md w-full">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('dashboard.projects.delete.title')}</h3>
+                <p className="text-gray-600 mb-6">
+                  {t('project.setting.user.delete.confirmation')}
+                </p>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    onClick={() => setDeleteConfirm(null)}
+                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    {t('common.cancel')}
+                  </button>
+                  <button
+                    onClick={() => handleDeleteUser(deleteConfirm)}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    {t('projects.delete')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -189,7 +220,7 @@ const SettingsView: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t('project.setting.user.name')}</label>
                 <input
                   type="text"
-                  value={newUser.name}
+                  value={editingUser ? editingUser.name : newUser.name}
                   onChange={(e) => setNewUser(prev => ({ ...prev, name: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -199,7 +230,7 @@ const SettingsView: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t('project.setting.user.email')}</label>
                 <input
                   type="email"
-                  value={newUser.email}
+                  value={editingUser ? editingUser.email : newUser.email}
                   onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -209,7 +240,7 @@ const SettingsView: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t('project.setting.user.username')}</label>
                 <input
                   type="text"
-                  value={newUser.username}
+                  value={editingUser ? editingUser.username : newUser.username}
                   onChange={(e) => setNewUser(prev => ({ ...prev, username: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -219,7 +250,7 @@ const SettingsView: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t('project.setting.user.password')}</label>
                 <input
                   type="password"
-                  value={newUser.password}
+                  value={editingUser ? editingUser.password : newUser.password}
                   onChange={(e) => setNewUser(prev => ({ ...prev, password: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -228,7 +259,7 @@ const SettingsView: React.FC = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t('project.setting.user.role')}</label>
                 <select
-                  value={newUser.role}
+                  value={editingUser ? editingUser.role : newUser.role}
                   onChange={(e) => setNewUser(prev => ({ ...prev, role: e.target.value as UserRole }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >

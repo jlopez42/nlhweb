@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, MapPin, User, FileText, MessageSquare, Download, Upload, Trash2, Send, Loader2 } from 'lucide-react';
-import { Project, ProjectFile, Question } from '../types';
+import { Manager, Project, ProjectConfig, ProjectFile, Question } from '../types';
 import { projectService } from '../services/projectService';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext'
@@ -12,8 +12,11 @@ const ProjectDetails: React.FC = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
   const [project, setProject] = useState<Project | null>(null);
+  const [professionals, setProfessionals] = useState<Manager[]>([]);
+  const [specialists, setSpecialists] = useState<Manager[]>([]);
   const [files, setFiles] = useState<ProjectFile[]>([]);
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [deadline, setDeadline] = useState<ProjectConfig | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'general' | 'deadline' | 'files' | 'qa' | 'downloads'>('general');
   const [newQuestion, setNewQuestion] = useState({
@@ -22,6 +25,7 @@ const ProjectDetails: React.FC = () => {
     questionType: 'Technical'
   });
   const [isUploading, setIsUploading] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -34,15 +38,16 @@ const ProjectDetails: React.FC = () => {
     
     setIsLoading(true);
     try {
-      const [projectData, filesData, questionsData] = await Promise.all([
+      const [projectData] = await Promise.all([
         projectService.getProjectById(id),
-        projectService.getProjectFiles(id),
-        projectService.getProjectQuestions(id)
       ]);
-      
-      setProject(projectData);
-      setFiles(filesData);
-      setQuestions(questionsData);
+      console.log('Loaded project data:', projectData);
+      setProject(projectData.project);
+      setProfessionals(projectData.professionals || []);
+      setSpecialists(projectData.specialists || []);
+      setFiles(projectData.files || []);
+      setQuestions(projectData.questions || []);
+      setDeadline(projectData.deadline || null);
     } catch (error) {
       console.error('Error loading project data:', error);
     } finally {
@@ -73,6 +78,7 @@ const ProjectDetails: React.FC = () => {
     try {
       await projectService.deleteFile(fileId);
       setFiles(files.filter(f => f.id !== fileId));
+      setDeleteConfirm(null);
     } catch (error) {
       console.error('Error deleting file:', error);
     }
@@ -115,6 +121,14 @@ const ProjectDetails: React.FC = () => {
     return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
   };
 
+  const formatDateGeneral = (date: Date) => {
+    return new Intl.DateTimeFormat('es-ES', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    }).format(new Date(date));
+  };
+
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('es-ES', {
       year: 'numeric',
@@ -126,8 +140,8 @@ const ProjectDetails: React.FC = () => {
     }).format(new Date(date));
   };
 
-  const canEditGeneral = user?.role === 'administrator';
-  const canEditDeadline = user?.role === 'administrator';
+  const canEditGeneral = user?.role === 'adminitrador';
+  const canEditDeadline = user?.role === 'adminitrador';
 
   const tabs = [
     { id: 'general', label: t('tab.general'), visible: true },
@@ -136,6 +150,18 @@ const ProjectDetails: React.FC = () => {
     { id: 'qa', label: t('tab.qa'), visible: true },
     { id: 'downloads', label: t('tab.download'), visible: true },
   ];
+
+  const tabsControl = [
+    { id: 'general', label: t('tab.general'), visible: true },
+    { id: 'deadline', label: t('tab.deadline'), visible: true },
+    { id: 'files', label: t('tab.files'), visible: true },
+    { id: 'qa', label: t('tab.qa'), visible: false },
+    { id: 'downloads', label: t('tab.download'), visible: false },
+  ];
+
+  const selectTabs = (projectType: String) => {
+    return projectType === 'Control de Obras' ? tabsControl : tabs;
+  };
 
   if (isLoading) {
     return (
@@ -183,15 +209,28 @@ const ProjectDetails: React.FC = () => {
                   </div>
                   <div className="flex items-center space-x-1">
                     <Calendar className="h-4 w-4" />
-                    <span>{formatDate(project.startDate)}</span>
+                    <span>{formatDateGeneral(project.created_at)}</span>
                   </div>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    project.status === 'active' ? 'bg-green-100 text-green-800' :
-                    project.status === 'completed' ? 'bg-blue-100 text-blue-800' :
+                    project.status === 'activo' ? 'bg-green-100 text-green-800' :
+                    project.status === 'finalizado' ? 'bg-blue-100 text-blue-800' :
                     'bg-yellow-100 text-yellow-800'
                   }`}>
                     {project.status}
                   </span>
+                </div>
+              </div>
+            </div>
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center space-x-3">
+                <img
+                  src={user?.avatar || `https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150`}
+                  alt={user?.name}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div>
+                  <p className="font-medium text-gray-900">{user?.name}</p>
+                  <p className="text-sm text-gray-500 capitalize">{user?.role}</p>
                 </div>
               </div>
             </div>
@@ -203,7 +242,7 @@ const ProjectDetails: React.FC = () => {
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8">
-            {tabs.filter(tab => tab.visible).map((tab) => (
+            {selectTabs(project.type).filter(tab => tab.visible).map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
@@ -229,36 +268,64 @@ const ProjectDetails: React.FC = () => {
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('project.detail.view')}</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-500">{t('project.general.description')}</label>
-                    <p className="text-gray-900">{project.description}</p>
+                    {project.description && (
+                      <>
+                        <label className="text-sm font-medium text-gray-500">{t('project.general.description')}</label>
+                        <p className="text-gray-900">{project.description}</p>
+                      </>
+                    )}
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-500">{t('project.detail.type')}</label>
-                      <p className="text-gray-900">{project.type}</p>
+                      {project.projectTypeId && (
+                        <>
+                          <label className="text-sm font-medium text-gray-500">{t('project.detail.type')}</label>
+                          <p className="text-gray-900">{project.projectTypeName}</p>
+                        </>
+                      )}
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-500">{t('project.detail.quantity')}</label>
-                      <p className="text-gray-900">{project.quantity}</p>
+                      {project.quantity !== null && (
+                        <>
+                          <label className="text-sm font-medium text-gray-500">{t('project.detail.quantity')}</label>
+                          <p className="text-gray-900">{project.quantity}</p>
+                        </>
+                      )}
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-500">{t('project.detail.surface')}</label>
-                      <p className="text-gray-900">{project.surface.toLocaleString()} m²</p>
+                      {project.surface !== null && (
+                        <>
+                          <label className="text-sm font-medium text-gray-500">{t('project.detail.surface')}</label>
+                          <p className="text-gray-900">{project.surface} m²</p>
+                        </>
+                      )}
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-500">{t('project.detail.floor')}</label>
-                      <p className="text-gray-900">{project.floor}</p>
+                      {project.floor && (
+                        <>
+                          <label className="text-sm font-medium text-gray-500">{t('project.detail.floor')}</label>
+                          <p className="text-gray-900">{project.floor}</p>
+                        </>
+                      )}  
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">{t('project.detail.materiality')}</label>
-                    <p className="text-gray-900">{project.materiality}</p>
+                    {project.materiality && (
+                      <>
+                        <label className="text-sm font-medium text-gray-500">{t('project.detail.materiality')}</label>
+                        <p className="text-gray-900">{project.materiality}</p>
+                      </>
+                    )}
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">{t('project.detail.enclosure')}</label>
-                    <p className="text-gray-900">{project.enclosure}</p>
+                    {project.enclosure && (
+                      <>
+                        <label className="text-sm font-medium text-gray-500">{t('project.detail.enclosure')}</label>
+                        <p className="text-gray-900">{project.enclosure}</p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -268,33 +335,53 @@ const ProjectDetails: React.FC = () => {
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-500">{t('project.officer.principal1')}</label>
-                      <p className="text-gray-900">{project.principal1}</p>
+                      {project.principal1 && (
+                        <>
+                          <label className="text-sm font-medium text-gray-500">{t('project.officer.principal1')}</label>
+                          <p className="text-gray-900">{project.principal1}</p>
+                        </>
+                      )}
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-500">{t('project.officer.principal2')}</label>
-                      <p className="text-gray-900">{project.principal2}</p>
+                      {project.principal2 && (
+                        <>
+                          <label className="text-sm font-medium text-gray-500">{t('project.officer.principal2')}</label>
+                          <p className="text-gray-900">{project.principal2}</p>
+                        </>
+                      )}
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">{t('project.officer.professional')}</label>
-                    <ul className="text-gray-900 list-disc list-inside">
-                      {project.professionals.map((prof, index) => (
-                        <li key={index}>{prof}</li>
-                      ))}
-                    </ul>
+                    {professionals.length > 0 && (
+                      <>
+                        <label className="text-sm font-medium text-gray-500">{t('project.officer.professional')}</label>
+                        <ul className="text-gray-900 list-disc list-inside">
+                          {professionals.map((prof, index) => (
+                            <li key={index}>{prof.name}</li>
+                          ))}
+                        </ul>
+                      </>
+                    )}
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">{t('project.officer.specialist')}</label>
-                    <ul className="text-gray-900 list-disc list-inside">
-                      {project.specialists.map((spec, index) => (
-                        <li key={index}>{spec}</li>
-                      ))}
-                    </ul>
+                    {specialists.length > 0 && (
+                      <>
+                        <label className="text-sm font-medium text-gray-500">{t('project.officer.specialist')}</label>
+                        <ul className="text-gray-900 list-disc list-inside">
+                          {specialists.map((spec, index) => (
+                            <li key={index}>{spec.name}</li>
+                          ))}
+                        </ul>
+                      </>
+                    )}
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">{t('project.officer.contact')}</label>
-                    <p className="text-gray-900">{project.contact}</p>
+                    {project.contact && (
+                      <>
+                        <label className="text-sm font-medium text-gray-500">{t('project.officer.contact')}</label>
+                        <p className="text-gray-900">{project.contact}</p>
+                      </>
+                    )}
                   </div>
                   {project.additionalInfo && (
                     <div>
@@ -316,15 +403,15 @@ const ProjectDetails: React.FC = () => {
                 <div className="space-y-4">
                   <div>
                     <label className="text-sm font-medium text-gray-500">{t('project.deadline.publication')}</label>
-                    <p className="text-gray-900">{formatDate(project.publicationDate)}</p>
+                    <p className="text-gray-900">{formatDate(deadline.publicationDate)}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">{t('project.deadline.start')}</label>
-                    <p className="text-gray-900">{formatDate(project.startDate)}</p>
+                    <p className="text-gray-900">{formatDate(deadline.startDate)}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">{t('project.deadline.end')}</label>
-                    <p className="text-gray-900">{formatDate(project.finishDate)}</p>
+                    <p className="text-gray-900">{formatDate(deadline.finishDate)}</p>
                   </div>
                 </div>
               </div>
@@ -334,15 +421,15 @@ const ProjectDetails: React.FC = () => {
                 <div className="space-y-4">
                   <div>
                     <label className="text-sm font-medium text-gray-500">{t('project.deadline.offers')}</label>
-                    <p className="text-gray-900">{formatDate(project.offersLimit)}</p>
+                    <p className="text-gray-900">{formatDate(deadline.offersLimit)}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">{t('project.deadline.ask')}</label>
-                    <p className="text-gray-900">{formatDate(project.asksLimit)}</p>
+                    <p className="text-gray-900">{formatDate(deadline.asksLimit)}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">{t('project.deadline.response')}</label>
-                    <p className="text-gray-900">{formatDate(project.responseLimit)}</p>
+                    <p className="text-gray-900">{formatDate(deadline.responseLimit)}</p>
                   </div>
                 </div>
               </div>
@@ -411,14 +498,14 @@ const ProjectDetails: React.FC = () => {
                           {formatDate(file.uploadDate)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {file.uploadedBy}
+                          {formatDate(file.uploadedBy)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {formatFileSize(file.size)}
+                          {formatFileSize(file.file_size)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <button
-                            onClick={() => handleDeleteFile(file.id)}
+                            onClick={() => setDeleteConfirm(file.id)}
                             className="text-red-600 hover:text-red-900"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -428,8 +515,34 @@ const ProjectDetails: React.FC = () => {
                     ))}
                   </tbody>
                 </table>
+                  {/* Delete Confirmation Modal */}
+                  {deleteConfirm && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                      <div className="bg-white rounded-lg p-6 max-w-md w-full">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('dashboard.projects.delete.title')}</h3>
+                        <p className="text-gray-600 mb-6">
+                          {t('project.setting.user.delete.confirmation')}
+                        </p>
+                        <div className="flex justify-end space-x-3">
+                          <button
+                            onClick={() => setDeleteConfirm(null)}
+                            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                          >
+                            {t('common.cancel')}
+                          </button>
+                          <button
+                            onClick={() => handleDeleteFile(deleteConfirm)}
+                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                          >
+                            {t('projects.delete')}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
               </div>
             )}
+
           </div>
         )}
 

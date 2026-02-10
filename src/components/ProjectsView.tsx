@@ -26,6 +26,7 @@ const ProjectsView: React.FC = () => {
     
     setIsLoading(true);
     try {
+      console.log("Loading projects for user:", user.role === 'administrator' ? 'all projects' : `user ID ${user.id}`);
       const data = user.role === 'administrator' 
         ? await projectService.getProjects()
         : await projectService.getProjectsByUserId(user.id);
@@ -45,6 +46,7 @@ const ProjectsView: React.FC = () => {
   };
 
   const handleEditProject = (project: Project) => {
+    console.log("Editing project:", project);
     setEditingProject(project);
     setIsModalOpen(true);
   };
@@ -91,7 +93,7 @@ const ProjectsView: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.projects')}</h1>
           <p className="text-gray-600 mt-2">{t('dashboard.projects.subtitle')}</p>
         </div>
-        
+
         {user?.role === 'administrator' && (
           <button
             onClick={handleNewProject}
@@ -126,18 +128,18 @@ const ProjectsView: React.FC = () => {
                     </div>
                     <div>
                       <span className="text-sm font-medium text-gray-500">{t('dashboard.projects.type')}:</span>
-                      <p className="text-gray-900">{project.type}</p>
+                      <p className="text-gray-900">{project.projectTypeTitle}</p>
                     </div>
                     <div>
                       <span className="text-sm font-medium text-gray-500">{t('dashboard.projects.start')}:</span>
-                      <p className="text-gray-900">{formatDate(project.startDate)}</p>
+                      <p className="text-gray-900">{formatDate(project.created_at)}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-center space-x-4">
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      project.status === 'active' ? 'bg-green-100 text-green-800' :
-                      project.status === 'completed' ? 'bg-blue-100 text-blue-800' :
+                      project.status === 'activo' ? 'bg-green-100 text-green-800' :
+                      project.status === 'finalizado' ? 'bg-blue-100 text-blue-800' :
                       'bg-yellow-100 text-yellow-800'
                     }`}>
                       {project.status}

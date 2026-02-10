@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Mail, SquareGantt, Shovel, PencilRuler, AppWindow, FolderKanban, BadgeDollarSign, Info, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Phone, Mail, SquareGantt, Shovel, PencilRuler, AppWindow, FolderKanban, BadgeDollarSign, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import LoginModal from '../components/LoginModal';
 import PreviewModal from '../components/previewModal';
 import LanguageSelector from '../components/LanguageSelector';
@@ -102,7 +102,9 @@ useEffect(() => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <img src={logo} alt="NLH Logo" className="h-12 w-12 ml-2" />
+              <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors" title="Ir al inicio">
+                <img src={logo} alt="NLH Logo" className="h-14 w-14 ml-2" />
+              </a>
             </div>
 
             <div className="hidden md:flex items-center space-x-8">
@@ -472,7 +474,7 @@ useEffect(() => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <img src={logo} alt="NLH Logo" className="h-12 w-12 ml-2" />
+              <img src={logo} alt="NLH Logo" className="h-12 w-12 ml-2 rounded-lg" />
             </div>
             <p className="text-gray-400">
               © 2025 NLH (Nosotros Lo Hacemos). All rights reserved.

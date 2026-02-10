@@ -1,10 +1,28 @@
-/** Entity of type of system users */
-export type UserRole = 'administrator' | 'customer' | 'provider';
+/* ============================================================
+   ENUM TYPES
+   ============================================================ */
 
-/** Entity of type of managers (professionals and specialists) */
-export type ManagerRole = 'professional' | 'specialist';
+export type UserRole =
+  | 'adminitrador'
+  | 'cliente'
+  | 'proveedor'
+  | 'arquitecto'
+  | 'especialista';
 
-/** Entity of system users */
+export type ManagerRole =
+  | 'profesional'
+  | 'especialista';
+
+export type ProjectStatus =
+  | 'activo'
+  | 'finalizado'
+  | 'pendiente';
+
+
+/* ============================================================
+   BASE MODELS
+   ============================================================ */
+
 export interface User {
   id: number;
   username: string;
@@ -12,112 +30,206 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
-  avatar?: string;
+  avatar?: string | null;
+
+  created_at: string | Date;
+  updated_at: string | Date;
 }
 
-/** Entity of project types */
-export interface ProjectType {
-  id: number;
-  title: string;
-}
 
-/** Entity of project information  */
-export interface Project {
-  id: number;
-  title: string;
-  description: string;
-  location: string;
-  type: ProjectType;
-  quantity: number;
-  floor: string;
-  materiality: string;
-  surface: number;
-  enclosure: string;
-  principal1: string;
-  principal2: string;
-  professionals: Manager[];
-  specialists: Manager[];
-  additionalInfo: string;
-  userId: number;
-  licenseId: number;
-  status: 'active' | 'completed' | 'pending';
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-/** Entity of people in charge information */
-export interface ProjectCharges {
-  id: number;
-  projectId: number;
-  mandatory1: string;
-  mandatory2: string;
-  professionals: Manager[];
-  specialists: Manager[];
-  contact: string;
-}
-
-/** Entity of managers (professionals and specialists) */
 export interface Manager {
   id: number;
   name: string;
   role: ManagerRole;
 }
 
-/** Entity of config dates projects */
+
+export interface ProjectType {
+  id: number;
+  title: string;
+}
+
+
+/* ============================================================
+   PROJECT
+   ============================================================ */
+
+export interface Project {
+  id: number;
+
+  title: string;
+  description: string;
+  location: string;
+
+  quantity: number;
+  floor: string;
+  materiality: string;
+
+  surface: number;
+  enclosure: string;
+
+  principal1: string;
+  principal2: string;
+
+  additionalInfo?: string | null;
+
+  userId: number;
+  projectTypeId: number;
+  
+  status: ProjectStatus;
+  
+  created_at: string | Date;
+  updated_at: string | Date;
+  projectTypeName: string;
+}
+
+
+/* ============================================================
+   PROJECT RELATIONS
+   ============================================================ */
+
+export interface ProjectProfessional {
+  project_id: number;
+  manager_id: number;
+}
+
+
+export interface ProjectSpecialist {
+  project_id: number;
+  manager_id: number;
+}
+
+
+/* ============================================================
+   PROJECT CHARGES
+   ============================================================ */
+
+export interface ProjectCharge {
+  id: number;
+
+  projectId: number;
+
+  mandatory1: string;
+  mandatory2: string;
+
+  contact: string;
+}
+
+
+export interface ProjectChargeProfessional {
+  charge_id: number;
+  manager_id: number;
+}
+
+
+export interface ProjectChargeSpecialist {
+  charge_id: number;
+  manager_id: number;
+}
+
+
+/* ============================================================
+   PROJECT CONFIG
+   ============================================================ */
+
 export interface ProjectConfig {
   id: number;
+
   projectId: number;
-  publicationDate: Date;
-  startDate: Date;
-  finishDate: Date;
-  offersLimit: number;
-  asksLimit: number;
-  responseLimit: number;
+
+  publicationDate: string | Date;
+  startDate: string | Date;
+  finishDate: string | Date;
+
+  offersLimit: string | Date;
+  asksLimit: string | Date;
+  responseLimit: string | Date;
 }
 
-/** Entity of project files could be attachment */
+
+/* ============================================================
+   PROJECT FILES
+   ============================================================ */
+
 export interface ProjectFile {
   id: number;
+
   projectId: number;
+
   filename: string;
   originalName: string;
-  size: number;
-  type: string;
-  uploadDate: Date;
-  uploadedBy: string;
+
+  file_size: number;
+
+  extension: string;
+
+  mime_type?: string | null;
+
+  /** Raw binary data */
+  file_content: Uint8Array;
+
+  uploadDate: string | Date;
+  uploadedBy: string | Date;
 }
 
-/** Entity of questions and answers about projects */
+
+/* ============================================================
+   QUESTIONS
+   ============================================================ */
+
 export interface Question {
   id: number;
+
   projectId: number;
+
   subject: string;
   question: string;
+
   questionType: string;
+
   askedBy: string;
-  askedAt: Date;
-  response?: string;
-  respondedBy?: string;
-  respondedAt?: Date;
+  askedAt: string | Date;
+
+  response?: string | null;
+
+  respondedBy?: string | null;
+  respondedAt?: string | Date | null;
 }
 
-/** Entity of licenses for projects */
-export interface License {
-  id: number;
-  name: string;
-  type: string;
-  issuingAuthority: string;
-  issueDate: Date;
-  expiryDate: Date;
-  status: 'active' | 'expired' | 'expiring';
-  userId: number;
-}
 
-/** Entity of contact messages sent to the system */
+/* ============================================================
+   CONTACT MESSAGES
+   ============================================================ */
+
 export interface ContactMessage {
   id: number;
+
   subject: string;
   message: string;
-  senderEmail?: string;
-  sentAt: Date;
+
+  senderEmail?: string | null;
+
+  sentAt: string | Date;
+}
+
+
+/* ============================================================
+   PROJECT MEMBERS
+   ============================================================ */
+
+export interface ProjectMember {
+  id: number;
+
+  project_id: number;
+  user_id: number;
+
+  role: string;
+
+  created_at: string | Date;
+}
+
+
+/** Entity of project with members */
+export interface ProjectWithMembers extends Project {
+  members: ProjectMember[];
 }

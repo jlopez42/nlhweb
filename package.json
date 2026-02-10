@@ -1,8 +1,8 @@
 {
   "name": "nlh-app",
-  "homepage": "https://jlopez42.github.io/nlhweb/",
+  "homepage": "https://www.nlh.cl/",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
