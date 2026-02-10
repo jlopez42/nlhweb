@@ -107,6 +107,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, project, o
       setUploadedFiles([]);
     }
   }, [project, user]);
+  const isAdministrator = user?.role === "administrator";
 
   const loadProjectFiles = async (projectId: string) => {
     try {
