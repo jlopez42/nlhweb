@@ -3,7 +3,7 @@
    ============================================================ */
 
 export type UserRole =
-  | 'adminitrador'
+  | 'administrador'
   | 'cliente'
   | 'proveedor'
   | 'arquitecto'
@@ -36,14 +36,6 @@ export interface User {
   updated_at: string | Date;
 }
 
-
-export interface Manager {
-  id: number;
-  name: string;
-  role: ManagerRole;
-}
-
-
 export interface ProjectType {
   id: number;
   title: string;
@@ -68,9 +60,6 @@ export interface Project {
   surface: number;
   enclosure: string;
 
-  principal1: string;
-  principal2: string;
-
   additionalInfo?: string | null;
 
   userId: number;
@@ -89,14 +78,14 @@ export interface Project {
    ============================================================ */
 
 export interface ProjectProfessional {
+  name: string;
   project_id: number;
-  manager_id: number;
 }
 
 
 export interface ProjectSpecialist {
+  name: string;
   project_id: number;
-  manager_id: number;
 }
 
 
@@ -114,19 +103,6 @@ export interface ProjectCharge {
 
   contact: string;
 }
-
-
-export interface ProjectChargeProfessional {
-  charge_id: number;
-  manager_id: number;
-}
-
-
-export interface ProjectChargeSpecialist {
-  charge_id: number;
-  manager_id: number;
-}
-
 
 /* ============================================================
    PROJECT CONFIG

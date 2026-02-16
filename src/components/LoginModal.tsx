@@ -66,7 +66,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              placeholder="admin"
+              placeholder="nombre de usuario"
               required
             />
           </div>
@@ -81,7 +81,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              placeholder="admin123"
+              placeholder="********"
               required
             />
           </div>
@@ -110,11 +110,15 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
         </form>
 
         <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-          <p className="text-sm text-gray-600 mb-2">{t('login.test')}</p>
+          <p className="text-sm text-gray-600 mb-2"></p>
           <div className="text-xs text-gray-500 space-y-1">
-            <div>Admin: admin / admin123</div>
-            <div>Customer: customer1 / customer123</div>
-            <div>Provider: provider1 / provider123</div>
+            <div className="flex items-center justify-between text-sm">
+                <label className="flex items-center">
+                  <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded" />
+                  <span className="ml-2 text-gray-600">Recordar</span>
+                </label>
+                <a href="#" className="text-blue-600 hover:underline">Olvidaste tu contraseña?</a>
+              </div>
           </div>
         </div>
       </div>

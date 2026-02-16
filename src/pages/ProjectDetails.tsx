@@ -140,8 +140,8 @@ const ProjectDetails: React.FC = () => {
     }).format(new Date(date));
   };
 
-  const canEditGeneral = user?.role === 'adminitrador';
-  const canEditDeadline = user?.role === 'adminitrador';
+  const canEditGeneral = user?.role === 'administrador';
+  const canEditDeadline = user?.role === 'administrador';
 
   const tabs = [
     { id: 'general', label: t('tab.general'), visible: true },
@@ -159,7 +159,7 @@ const ProjectDetails: React.FC = () => {
     { id: 'downloads', label: t('tab.download'), visible: false },
   ];
 
-  const selectTabs = (projectType: String) => {
+  const selectTabs = (projectType: string) => {
     return projectType === 'Control de Obras' ? tabsControl : tabs;
   };
 

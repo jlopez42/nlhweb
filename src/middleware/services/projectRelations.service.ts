@@ -1,5 +1,5 @@
 import ApiClient from '../http/apiClient';
-import { ProjectProfessional, ProjectSpecialist } from '../types/index';
+import { ProjectProfessional, ProjectSpecialist } from '../../types/index';
 
 export class ProjectRelationsService {
   private apiClient: ApiClient;

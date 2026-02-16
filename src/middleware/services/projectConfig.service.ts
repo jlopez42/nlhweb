@@ -1,5 +1,5 @@
 import ApiClient from '../http/apiClient';
-import { ProjectConfig } from '../types/index';
+import { ProjectConfig } from '../../types/index';
 
 export class ProjectConfigService {
   private apiClient: ApiClient;

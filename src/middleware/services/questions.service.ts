@@ -1,5 +1,5 @@
 import ApiClient from '../http/apiClient';
-import { Question } from '../types';
+import { Question } from '../../types/index';
 
 class QuestionsService {
   private apiClient: ApiClient;

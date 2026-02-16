@@ -7,7 +7,7 @@ export const mockUsers: User[] = [
     password: 'admin123',
     name: 'John Smith',
     email: 'admin@constructpro.com',
-    role: 'administrator',
+    role: 'administrador',
     avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150'
   },
   {
@@ -16,7 +16,7 @@ export const mockUsers: User[] = [
     password: 'customer123',
     name: 'Maria Rodriguez',
     email: 'maria@example.com',
-    role: 'customer',
+    role: 'cliente',
     avatar: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150'
   },
   {
@@ -25,7 +25,7 @@ export const mockUsers: User[] = [
     password: 'provider123',
     name: 'Carlos Silva',
     email: 'carlos@example.com',
-    role: 'provider',
+    role: 'proveedor',
     avatar: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150'
   }
 ];

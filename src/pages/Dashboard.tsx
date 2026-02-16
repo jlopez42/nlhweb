@@ -5,10 +5,9 @@ import { useLanguage } from '../contexts/LanguageContext';
 import logo from '../assets/icons/logo.png';
 import ProjectsView from '../components/ProjectsView';
 import ProfileView from '../components/ProfileView';
-import LicenseView from '../components/LicenseView';
 import SettingsView from '../components/SettingsView';
 
-type DashboardSection = 'projects' | 'profile' | 'license' | 'settings';
+type DashboardSection = 'projects' | 'profile' | 'settings';
 
 const Dashboard: React.FC = () => {
   const [activeSection, setActiveSection] = useState<DashboardSection>('projects');
@@ -22,18 +21,17 @@ const Dashboard: React.FC = () => {
   const menuItems = [
     { id: 'projects', label: t('dashboard.projects.title'), icon: FolderOpen, visible: true },
     { id: 'profile', label: t('dashboard.profile'), icon: User, visible: true },
-    { id: 'license', label: t('dashboard.license'), icon: CreditCard, visible: false },
     { id: 'settings', label: t('dashboard.settings'), icon: SettingsIcon, visible: user?.role === 'administrador' },
   ];
 
   const renderContent = () => {
+    console.log('Rendering content for section:', activeSection);
+    console.log('Current user role:', user?.role);
     switch (activeSection) {
       case 'projects':
         return <ProjectsView />;
       case 'profile':
         return <ProfileView />;
-      case 'license':
-        return <LicenseView />;
       case 'settings':
         return user?.role === 'administrador' ? <SettingsView /> : <ProjectsView />;
       default:

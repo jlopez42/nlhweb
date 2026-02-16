@@ -1,5 +1,5 @@
 import ApiClient from '../http/apiClient';
-import { ProjectCharge, ProjectChargeProfessional, ProjectChargeSpecialist } from '../types';
+import { ProjectCharge } from '../../types/index';
 
 export default class ProjectChargesService {
   private apiClient: ApiClient;
@@ -23,11 +23,4 @@ export default class ProjectChargesService {
     return response.data;
   }
 
-  async assignProfessionalToCharge(chargeId: number, professional: ProjectChargeProfessional): Promise<void> {
-    await this.apiClient.post(`/project-charges/${chargeId}/professionals`, professional);
-  }
-
-  async assignSpecialistToCharge(chargeId: number, specialist: ProjectChargeSpecialist): Promise<void> {
-    await this.apiClient.post(`/project-charges/${chargeId}/specialists`, specialist);
-  }
 }

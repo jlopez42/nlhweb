@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole } from '../types';
-import { mockUsers } from '../data/mockData';
+import UsersService from '../middleware/services/users.service';
 
 interface AuthContextType {
   user: User | null;
@@ -32,7 +32,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (username: string, password: string): Promise<boolean> => {
-    const foundUser = mockUsers.find(u => u.username === username && u.password === password);
+    const usersService = new UsersService();
+    const foundUser = await usersService.authenticate(username, password);
+
     if (foundUser) {
       setUser(foundUser);
       localStorage.setItem('user', JSON.stringify(foundUser));

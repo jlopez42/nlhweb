@@ -2,6 +2,9 @@ import { Project, ProjectFile, ProjectType, Question } from '../types';
 import { mockProjects, mockProjectFiles, mockQuestions, mockQuestionsSpanish } from '../data/mockData';
 import ProjectsService from '../middleware/services/projects.service';
 import ProjectTypesService from '../middleware/services/projectTypes.service';
+import ProjectMembersService from '../middleware/services/projectMembers.service';
+import ProjectFilesService from '../middleware/services/projectFiles.service';
+import UsersService from '../middleware/services/users.service';
 import { util } from '../common';
 
 export const projectService = {
@@ -39,17 +42,13 @@ export const projectService = {
 
   // Create new project
   createProject: async (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<Project> => {
+    console.log('Creating new project with data:', projectData);
     return new Promise((resolve) => {
-      setTimeout(() => {
-        const newProject: Project = {
-          ...projectData,
-          id: Date.now().toString(),
-          createdAt: new Date(),
-          updatedAt: new Date()
-        };
-        mockProjects.push(newProject);
-        resolve(newProject);
-      }, 800);
+      setTimeout(async () => {
+        const project = await new ProjectsService().createProject(projectData);
+        console.log('Created project:', project);
+        resolve(project);
+      }, 600);
     });
   },
 
@@ -59,6 +58,7 @@ export const projectService = {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const project = await new ProjectsService().updateProject(id, updates);
+        console.log('Updated project:', project);
         resolve(project || null);
       }, 600);
     });
@@ -67,10 +67,9 @@ export const projectService = {
   // Delete project
   deleteProject: async (id: string): Promise<boolean> => {
     return new Promise((resolve) => {
-      setTimeout(() => {
-        const index = mockProjects.findIndex(p => p.id === id);
-        if (index !== -1) {
-          mockProjects.splice(index, 1);
+      setTimeout(async () => {
+        const project = await new ProjectsService().deleteProject(+id);
+        if (project !== null && project !== undefined) {  
           resolve(true);
         } else {
           resolve(false);
@@ -127,13 +126,13 @@ export const projectService = {
     if (file.mime_type) form.append("mime_type", file.mime_type);
     if (file.uploadedBy) form.append("uploadedBy", file.uploadedBy);
 
-    const res = await fetch(`/api/projects/${projectId}/files`, {
-      method: "POST",
-      body: form,
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const projectFile = await new ProjectFilesService().uploadFile(+projectId, form);
+        console.log('Created project file:', projectFile);
+        resolve(projectFile);   
+      }, 600);
     });
-
-    if (!res.ok) throw new Error("Failed to associate file with project");
-    return res.json();
   },
 
   // Delete file
@@ -196,18 +195,32 @@ export const projectService = {
     });
   },
 
-  // New: fetch global customers pool
-  getCustomersByProjectId: async (projectId: string) => {
-    const res = await fetch(`/api/projects/${projectId}/customers`);
-    if (!res.ok) {
-      throw new Error("Failed to load customers for project");
-    }
-    return res.json();
-  },
 
   // ... Additional project-related services can be added here
   // e.g., assignTeamMembers, setDeadlines, etc.
   // ...
+
+
+  // New: fetch global customers pool
+  getCustomersByProjectId: async (projectId: string) => {
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const response = await new ProjectMembersService().getMembers(+projectId);
+        console.log("Fetched project members (customers):", response);
+        resolve(response);
+      }, 500);
+    });
+  },
+
+   getCustomers: async () => {
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const response = await new ProjectMembersService().getAllMembers();
+        console.log("Fetched all members:", response);
+        resolve(response);
+      }, 500);
+    });
+  },
 
   // Populate select options for projectType field
   getProjectTypes: async (): Promise<ProjectType[]> => {
@@ -218,6 +231,17 @@ export const projectService = {
         resolve(options);
       }, 200);
     });
+  },
+  
+  getAllUsers: async () => {
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const response = await new UsersService().getAllUsers();
+        console.log("Fetched all users:", response);
+        resolve(response);
+      }, 500);
+    });
   }
+
   
 };

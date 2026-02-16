@@ -26,8 +26,8 @@ const ProjectsView: React.FC = () => {
     
     setIsLoading(true);
     try {
-      console.log("Loading projects for user:", user.role === 'administrator' ? 'all projects' : `user ID ${user.id}`);
-      const data = user.role === 'administrator' 
+      console.log("Loading projects for user:", user.role === 'administrador' ? 'all projects' : `user ID ${user.id}`);
+      const data = user.role === 'administrador' 
         ? await projectService.getProjects()
         : await projectService.getProjectsByUserId(user.id);
       setProjects(data);
@@ -39,7 +39,7 @@ const ProjectsView: React.FC = () => {
   };
 
   const handleNewProject = () => {
-    if (user?.role === 'administrator') {
+    if (user?.role === 'administrador') {
       setEditingProject(null);
       setIsModalOpen(true);
     }
@@ -52,7 +52,7 @@ const ProjectsView: React.FC = () => {
   };
 
   const handleDeleteProject = async (projectId: string) => {
-    if (user?.role !== 'administrator') return;
+    if (user?.role !== 'administrador') return;
     
     try {
       await projectService.deleteProject(projectId);
@@ -94,7 +94,7 @@ const ProjectsView: React.FC = () => {
           <p className="text-gray-600 mt-2">{t('dashboard.projects.subtitle')}</p>
         </div>
 
-        {user?.role === 'administrator' && (
+        {user?.role === 'administrador' && (
           <button
             onClick={handleNewProject}
             className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-6 py-3 rounded-lg font-medium hover:from-blue-700 hover:to-cyan-600 transition-all flex items-center space-x-2 shadow-md"
@@ -167,7 +167,7 @@ const ProjectsView: React.FC = () => {
                     <Edit className="h-5 w-5" />
                   </button>
                   
-                  {user?.role === 'administrator' && (
+                  {user?.role === 'administrador' && (
                     <button
                       onClick={() => setDeleteConfirm(project.id)}
                       className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"

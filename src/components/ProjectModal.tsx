@@ -20,7 +20,6 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   onSave,
 }) => {
   const { user } = useAuth();
-  console.log("Current User in ProjectModal Create or Edit Project ProjectModal.tsx:", user?.role);
   const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -40,8 +39,8 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
     enclosure: "",
     principal1: "",
     principal2: "",
-    professionals: [""],
-    specialists: [""],
+    professionals: [{name: ""}],
+    specialists: [{name: ""}],
     contact: "",
     additionalInfo: "",
     publicationDate: "",
@@ -63,12 +62,10 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   useEffect(() => {
     if (project) {
       const fetchProjectData = async () => {
-        console.log("Loading project into form:", project);
-        console.log("Fetching additional project data for editing...", project.projectTypeId);
         const [projectData] = await Promise.all([
           projectService.getProjectById(project.id),
         ]);
-        console.log("Fetched project data for editing:", projectData);
+        console.log("Fetched project data:", projectData);
         setFormData({
           title: project.title,
           description: project.description,
@@ -80,8 +77,8 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           materiality: project.materiality,
           surface: project.surface,
           enclosure: project.enclosure,
-          principal1: project.principal1,
-          principal2: project.principal2,
+          principal1: projectData.charges[0]?.mandatory1 || "",
+          principal2: projectData.charges[0]?.mandatory2 || "",
           professionals: projectData.professionals ?? [],
           specialists: projectData.specialists ?? [],
           contact: projectData.charges[0]?.contact || "",
@@ -103,7 +100,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         });
         // Load existing files and associated customers if editing
         loadProjectFiles(projectData.files ?? []);
-        setAssociatedCustomers(projectData.customers ?? []);
+        setAssociatedCustomers(projectData.members ?? []);
       };
       fetchProjectData();
     } else {
@@ -121,8 +118,8 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         enclosure: "",
         principal1: "",
         principal2: "",
-        professionals: [""],
-        specialists: [""],
+        professionals: [{name: ""}],
+        specialists: [{name: ""}],
         contact: "",
         additionalInfo: "",
         publicationDate: "",
@@ -137,7 +134,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         asksLimitTime: "",
         responseLimit: "",
         responseLimitTime: "",
-        status: "pending",
+        status: "pendiente",
         userId: user?.id || "",
       });
       setUploadedFiles([]);
@@ -158,7 +155,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   // 2. CUSTOMER LISTS (Dummy Data)
   // The global pool of customers available to be added
   const [availableCustomers, setAvailableCustomers] = useState<
-    { id: number; name: string; industry?: string; email?: string }[]
+    { id: number; name: string; email?: string; role?: string}[]
   >([]);
  
    // The customers currently linked to this specific project
@@ -169,10 +166,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
     const loadMeta = async () => {
       try {
         const typesPromise = projectService.getProjectTypes?.() ?? Promise.resolve([]);
-        const customersPromise =
-          project && projectService.getCustomersByProjectId
-            ? projectService.getCustomersByProjectId(String(project.id))
-            : Promise.resolve([]);
+        const customersPromise = projectService.getCustomers();
         const [types, customers] = await Promise.all([typesPromise, customersPromise]);
         setProjectTypes(Array.isArray(types) ? types.map((t) => typeof t === 'string' ? { id: 0, title: t } : t) : []);
         setAvailableCustomers(Array.isArray(customers) ? customers : []);
@@ -342,13 +336,13 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
+      console.log("Professionals before submit:", formData.professionals);
       const projectData = {
         ...formData,
-        publicationDate: new Date(formData.publicationDate),
-        startDate: new Date(formData.startDate),
-        finishDate: new Date(formData.finishDate),
         professionals: formData.professionals.filter((p) => p.name.trim() !== ""),
         specialists: formData.specialists.filter((s) => s.name.trim() !== ""),
+        members: associatedCustomers,
+        files: uploadedFiles.filter((f) => !f.id.toString().startsWith("temp_")), // Only include files that are not newly added
       };
 
       let savedProject: Project;
@@ -386,9 +380,10 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   };
 
   const addProfessional = () => {
+    console.log("Adding professional. Current professionals:", formData.professionals);
     setFormData((prev) => ({
       ...prev,
-      professionals: [...prev.professionals, ""],
+      professionals: [...prev.professionals, {name: ""}],
     }));
   };
 
@@ -403,7 +398,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
     setFormData((prev) => ({
       ...prev,
       professionals: prev.professionals.map((p, i) =>
-        i === index ? value : p
+        i === index ? {...p, name: value} : p
       ),
     }));
   };
@@ -411,7 +406,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   const addSpecialist = () => {
     setFormData((prev) => ({
       ...prev,
-      specialists: [...prev.specialists, ""],
+      specialists: [...prev.specialists, {name: ""}],
     }));
   };
 
@@ -425,7 +420,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   const updateSpecialist = (index: number, value: string) => {
     setFormData((prev) => ({
       ...prev,
-      specialists: prev.specialists.map((s, i) => (i === index ? value : s)),
+      specialists: prev.specialists.map((s, i) => (i === index ? {...s, name: value} : s)),
     }));
   };
 
@@ -585,6 +580,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                             setFormData((prev) => ({
                               ...prev,
                               type: e.target.value,
+                              typeId: projectTypes.find((pt) => pt.title === e.target.value)?.id,
                             }))
                           }
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"

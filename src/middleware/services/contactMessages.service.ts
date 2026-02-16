@@ -1,5 +1,5 @@
 import ApiClient from '../http/apiClient';
-import { ContactMessage } from '../types/index';
+import { ContactMessage } from '../../types/index';
 
 class ContactMessagesService {
   private apiClient: ApiClient;

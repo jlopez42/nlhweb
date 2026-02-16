@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Users, FolderPlus, BookTemplate as FileTemplate, Database, Plus, Edit, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Users, Database, Plus, Edit, Trash2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { User, UserRole } from '../types';
-import { mockUsers } from '../data/mockData';
-
+import { projectService } from '../services/projectService';
 const SettingsView: React.FC = () => {
   const { user } = useAuth();
   console.log('Current User in SettingsView:', user);
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'users' | 'templates' | 'backup'>('users');
-  const [users, setUsers] = useState<User[]>(mockUsers);
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
@@ -19,8 +19,25 @@ const SettingsView: React.FC = () => {
     password: '',
     name: '',
     email: '',
-    role: 'customer' as UserRole
+    role: 'cliente' as UserRole
   });
+
+  useEffect(() => {
+      loadUsers();
+  });
+
+  const loadUsers = async () => {
+
+    setIsLoading(true);
+    try {
+      const data = await projectService.getAllUsers();
+      setUsers(data);
+    } catch (error) {
+      console.error('Error loading users:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleCreateUser = () => {
     const user: User = {
@@ -29,7 +46,7 @@ const SettingsView: React.FC = () => {
     };
     setUsers([...users, user]);
     setIsUserModalOpen(false);
-    setNewUser({ username: '', password: '', name: '', email: '', role: 'customer' });
+    setNewUser({ username: '', password: '', name: '', email: '', role: 'cliente' });
   };
 
   const handleDeleteUser = (userId: string) => {
@@ -42,7 +59,7 @@ const SettingsView: React.FC = () => {
     { id: 'backup', label: t('project.setting.tab.backup'), icon: Database },
   ];
 
-  if (user?.role !== 'administrator') {
+  if (user?.role !== 'administrador') {
     return (
       <div className="text-center py-12">
         <p className="text-gray-500">{t('project.setting.denied')}</p>
@@ -125,8 +142,8 @@ const SettingsView: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 text-xs font-medium rounded-full capitalize ${
-                        userRow.role === 'administrator' ? 'bg-purple-100 text-purple-800' :
-                        userRow.role === 'customer' ? 'bg-blue-100 text-blue-800' :
+                        userRow.role === 'administrador' ? 'bg-purple-100 text-purple-800' :
+                        userRow.role === 'cliente' ? 'bg-blue-100 text-blue-800' :
                         'bg-green-100 text-green-800'
                       }`}>
                         {userRow.role}
@@ -146,7 +163,7 @@ const SettingsView: React.FC = () => {
                         >
                           <Edit className="h-5 w-5" />
                         </button>
-                        {user?.role === 'administrator' && (
+                        {user?.role === 'administrador' && (
                           <button
                             onClick={() => setDeleteConfirm(userRow.id)}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
