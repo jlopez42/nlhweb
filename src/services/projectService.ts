@@ -1,4 +1,4 @@
-import { Project, ProjectFile, ProjectType, Question } from '../types';
+import { Project, ProjectFile, ProjectType, Question, User } from '../types';
 import { mockProjects, mockProjectFiles, mockQuestions, mockQuestionsSpanish } from '../data/mockData';
 import ProjectsService from '../middleware/services/projects.service';
 import ProjectTypesService from '../middleware/services/projectTypes.service';
@@ -241,7 +241,62 @@ export const projectService = {
         resolve(response);
       }, 500);
     });
-  }
+  },
 
+  // Create new user (for project members)
+  createUser: async (userData: Omit<User, 'id' | 'created_at' | 'updated_at'>): Promise<User> => {
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const response = await new UsersService().createUser(userData);
+        console.log("Created user:", response);
+        resolve(response);
+      }, 500);
+    });
+  },
+
+  deleteUser: async (userId: number): Promise<void> => {
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        await new UsersService().deleteUser(userId);
+        console.log("Deleted user with ID:", userId);
+        resolve();
+      }, 300);
+    });
+  },
+
+  updateUser: async (userId: number, userData: Partial<User>): Promise<User> => {
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const response = await new UsersService().updateUser(userId, userData);
+        console.log("Updated user:", response);
+        resolve(response);
+      }, 500);
+    });
+  },
+
+  getUserById: async (userId: number): Promise<User> => {
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const response = await new UsersService().getUserById(userId);
+        console.log("Fetched user by ID:", response);
+        resolve(response);
+      }, 500);
+    });
+  },
+
+  // Update user password
+  updatePassword: async (userId: number | undefined, newPassword: string): Promise<User> => {
+    if (!userId) {
+      throw new Error("User ID is required to update password");
+    }
+    console.log(`Updating password for user ID: ${userId}`);
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const response = await new UsersService().changePassword(userId, newPassword);
+        console.log("Updated user password:", response);
+        resolve(response);
+      }, 500);
+    });
+  }
   
 };

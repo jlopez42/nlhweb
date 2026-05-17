@@ -5,7 +5,7 @@ class ProjectsService {
   private apiClient: ApiClient;
 
   constructor() {
-    this.apiClient = new ApiClient('http://localhost:3000/api/v1');
+    this.apiClient = new ApiClient('https://backend.nlh.cl/api/v1');
   }
 
   async createProject(project: Omit<Project, 'id' | 'created_at' | 'updated_at'>): Promise<Project> {

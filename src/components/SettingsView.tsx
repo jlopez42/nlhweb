@@ -24,7 +24,7 @@ const SettingsView: React.FC = () => {
 
   useEffect(() => {
       loadUsers();
-  });
+  },[]);
 
   const loadUsers = async () => {
 
@@ -39,19 +39,50 @@ const SettingsView: React.FC = () => {
     }
   };
 
-  const handleCreateUser = () => {
-    const user: User = {
-      id: Date.now().toString(),
-      ...newUser
-    };
-    setUsers([...users, user]);
-    setIsUserModalOpen(false);
-    setNewUser({ username: '', password: '', name: '', email: '', role: 'cliente' });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingUser) {
+      await handleUpdateUser();
+    } else {
+      await handleCreateUser();
+    }
+  };
+
+  const handleCreateUser = async () => {
+    console.log('Creating user with data:', newUser);
+    try {
+      const data = await projectService.createUser(newUser);
+      console.log('User created successfully:', data);
+      setIsUserModalOpen(false);
+      setNewUser({ username: '', password: '', name: '', email: '', role: 'cliente' });
+      loadUsers();
+    } catch (error) {
+      console.error('Error creating user', error);
+    }
   };
 
   const handleDeleteUser = (userId: string) => {
-    setUsers(users.filter(u => u.id !== userId));
-    setDeleteConfirm(null);
+    console.log('Attempting to delete user with ID:', userId);
+     projectService.deleteUser(Number(userId))
+      .then(() => {
+        console.log('User deleted successfully');
+        loadUsers();
+        setDeleteConfirm(null);
+      });
+  };
+
+  const handleUpdateUser = async () => {
+    if (!editingUser) return;
+    console.log('Updating user with data:', editingUser);
+    try {
+      const data = await projectService.updateUser(editingUser.id, editingUser);
+      console.log('User updated successfully:', data);
+      setIsUserModalOpen(false);
+      setEditingUser(null);
+      loadUsers();
+    } catch (error) {
+      console.error('Error updating user', error);
+    }
   };
 
   const tabs = [
@@ -238,7 +269,7 @@ const SettingsView: React.FC = () => {
                 <input
                   type="text"
                   value={editingUser ? editingUser.name : newUser.name}
-                  onChange={(e) => setNewUser(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) => { editingUser ? setEditingUser(prev => ({ ...prev, name: e.target.value })) : setNewUser(prev => ({ ...prev, name: e.target.value })) }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -248,7 +279,7 @@ const SettingsView: React.FC = () => {
                 <input
                   type="email"
                   value={editingUser ? editingUser.email : newUser.email}
-                  onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
+                  onChange={(e) => { editingUser ? setEditingUser(prev => ({ ...prev, email: e.target.value })) : setNewUser(prev => ({ ...prev, email: e.target.value })) }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -258,7 +289,7 @@ const SettingsView: React.FC = () => {
                 <input
                   type="text"
                   value={editingUser ? editingUser.username : newUser.username}
-                  onChange={(e) => setNewUser(prev => ({ ...prev, username: e.target.value }))}
+                  onChange={(e) => { editingUser ? setEditingUser(prev => ({ ...prev, username: e.target.value })) : setNewUser(prev => ({ ...prev, username: e.target.value })) }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -268,7 +299,7 @@ const SettingsView: React.FC = () => {
                 <input
                   type="password"
                   value={editingUser ? editingUser.password : newUser.password}
-                  onChange={(e) => setNewUser(prev => ({ ...prev, password: e.target.value }))}
+                  onChange={(e) => { editingUser ? setEditingUser(prev => ({ ...prev, password: e.target.value })) : setNewUser(prev => ({ ...prev, password: e.target.value })) }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -277,13 +308,13 @@ const SettingsView: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t('project.setting.user.role')}</label>
                 <select
                   value={editingUser ? editingUser.role : newUser.role}
-                  onChange={(e) => setNewUser(prev => ({ ...prev, role: e.target.value as UserRole }))}
+                  onChange={(e) => { editingUser ? setEditingUser(prev => ({ ...prev, role: e.target.value as UserRole })) : setNewUser(prev => ({ ...prev, role: e.target.value as UserRole })) }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="administrator">{t('project.setting.user.administrator')}</option>
-                  <option value="customer">{t('project.setting.user.customer')}</option>
-                  <option value="provider">{t('project.setting.user.provider')}</option>
-                  <option value="professional">{t('project.setting.user.professional')}</option>
+                  <option value="administrador">{t('project.setting.user.administrator')}</option>
+                  <option value="cliente">{t('project.setting.user.customer')}</option>
+                  <option value="proveedor">{t('project.setting.user.provider')}</option>
+                  <option value="profesional">{t('project.setting.user.professional')}</option>
                 </select>
               </div>
             </form>
@@ -293,14 +324,14 @@ const SettingsView: React.FC = () => {
                 onClick={() => {
                   setIsUserModalOpen(false);
                   setEditingUser(null);
-                  setNewUser({ username: '', password: '', name: '', email: '', role: 'customer' });
+                  setNewUser({ username: '', password: '', name: '', email: '', role: 'cliente' });
                 }}
                 className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               >
                 {t('common.cancel')}
               </button>
               <button
-                onClick={handleCreateUser}
+                onClick={handleSubmit}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 {editingUser ? t('project.setting.update') : t('project.setting.save')}

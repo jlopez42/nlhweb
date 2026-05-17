@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Save, Lock, User } from 'lucide-react';
+import { Save, Lock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { projectService } from '../services/projectService';
 
 const ProfileView: React.FC = () => {
   const { user } = useAuth();
@@ -16,6 +17,16 @@ const ProfileView: React.FC = () => {
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!passwords.current || !passwords.new || !passwords.confirm) {
+      setMessage(t('project.password.filled'));
+      return;
+    }
+
+    if (passwords.current !== user?.password) { 
+      setMessage(t('project.password.incorrect'));
+      return;
+    }
     
     if (passwords.new !== passwords.confirm) {
       setMessage(t('project.password.match'));
@@ -30,7 +41,9 @@ const ProfileView: React.FC = () => {
     setIsLoading(true);
     
     // Simulate API call
-    setTimeout(() => {
+    setTimeout(async () => {
+      const data = await projectService.updatePassword(user?.id, passwords.new);
+      console.log('Password updated successfully:', data);
       setMessage(t('project.password.success'));
       setPasswords({ current: '', new: '', confirm: '' });
       setIsLoading(false);
@@ -47,9 +60,6 @@ const ProfileView: React.FC = () => {
       {/* User Info Card */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <div className="flex items-center space-x-4 mb-6">
-          <div className="bg-gradient-to-r from-blue-600 to-cyan-500 w-16 h-16 rounded-full flex items-center justify-center">
-            <User className="h-8 w-8 text-white" />
-          </div>
           <div>
             <h2 className="text-xl font-semibold text-gray-900">{user?.name}</h2>
             <p className="text-gray-600">{user?.email}</p>
@@ -112,7 +122,7 @@ const ProfileView: React.FC = () => {
 
           {message && (
             <div className={`p-3 rounded-lg ${
-              message.includes('successfully') 
+              message.includes('exitosamente') 
                 ? 'bg-green-50 text-green-700' 
                 : 'bg-red-50 text-red-700'
             }`}>

@@ -5,7 +5,7 @@ export default class ProjectChargesService {
   private apiClient: ApiClient;
 
   constructor() {
-    this.apiClient = new ApiClient('http://localhost:3000/api/v1');
+    this.apiClient = new ApiClient('https://backend.nlh.cl/api/v1');
   }
 
   async createCharge(charge: ProjectCharge): Promise<ProjectCharge> {

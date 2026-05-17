@@ -6,8 +6,7 @@ export type UserRole =
   | 'administrador'
   | 'cliente'
   | 'proveedor'
-  | 'arquitecto'
-  | 'especialista';
+  | 'profesional';
 
 export type ManagerRole =
   | 'profesional'

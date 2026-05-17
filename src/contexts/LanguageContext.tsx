@@ -61,6 +61,7 @@ const translations = {
     'login.submit': 'Sign In',
     'login.error': 'Invalid username or password',
     'login.test': 'Demo Credentials',
+    'login.forgotPasswordMessage': 'If you forgot your password, please send us an email at plataformaonline@nlh.cl',
     
     // Dashboard
     'dashboard.profile': 'Profile',
@@ -97,6 +98,9 @@ const translations = {
     'project.password.match': 'New passwords do not match',
     'project.password.long': 'Password must be at least 6 characters long',
     'project.password.success': 'Password updated successfully',
+    'project.password.error': 'Error updating password. Please try again.',
+    'project.password.incorrect': 'Current password is incorrect.',
+    'project.password.filled': 'Please fill in all password fields.',
 
     // Profile Button
     'project.password.updating': 'Updating...',
@@ -277,7 +281,7 @@ const translations = {
 
     'project.setting.user.table.user': 'User',
     'project.setting.user.table.role': 'Role',
-    'project.setting.user.table.username': 'Company',
+    'project.setting.user.table.username': 'Name',
     'project.setting.user.table.actions': 'Actions',
     'project.setting.user.delete.confirmation': 'Are you sure you want to delete this user? This action cannot be undone.',
 
@@ -371,6 +375,7 @@ const translations = {
     'login.submit': 'Ingresar',
     'login.error': 'Usuario o contraseña inválidos',
     'login.test': 'Datos de Prueba',
+    'login.forgotPasswordMessage': 'Si olvidaste tu contraseña, envíanos un correo a plataformaonline@nlh.cl',
     
     // Dashboard
     'dashboard.profile': 'Perfil',
@@ -408,6 +413,9 @@ const translations = {
     'project.password.match': 'La nueva contraseña no coinciden',
     'project.password.long': 'La contraseña debe tener al menos 6 caracteres.',
     'project.password.success': 'Contraseña actualizada exitosamente',
+    'project.password.error': 'Error al actualizar la contraseña. Por favor, inténtalo de nuevo.',
+    'project.password.incorrect': 'La contraseña actual es incorrecta.',
+    'project.password.filled': 'Por favor, completa todos los campos de contraseña.',
 
     // Profile Button
     'project.password.updating': 'Actualizando...',
@@ -456,11 +464,11 @@ const translations = {
     'project.officer.contact': 'Contacto',
 
     // Project Customer Linked Section
-    'project.customer.title': 'Usuarios Asociados',
+    'project.customer.title': 'Usuarios Vinculados',
     'project.customer.search.title': 'Buscar Usuarios Registrados',
     'project.customer.search.filter': 'Filtar por nombre...',
     'project.customer.linked.title': 'Usuarios Vinculados',
-    'project.customer.no.linked': 'No hay usuarios asociados al proyecto.',
+    'project.customer.no.linked': 'No hay usuarios vinculados al proyecto.',
     
     // Project Addionally Section
     'project.addition.title': 'Información Adicional',
@@ -584,9 +592,9 @@ const translations = {
     'project.setting.user.provider': 'Proveedor',
     'project.setting.user.professional': 'Profesional',
 
-    'project.setting.user.table.user': 'Usuario',
+    'project.setting.user.table.username': 'Usuario',
     'project.setting.user.table.role': 'Rol',
-    'project.setting.user.table.username': 'Nombre de Empresa',
+    'project.setting.user.table.user': 'Nombre',
     'project.setting.user.table.actions': 'Acciones',
     'project.setting.user.delete.confirmation': 'Esta seguro que desea eliminar este usuario? Esta acción no puede ser deshecha',
 

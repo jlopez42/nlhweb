@@ -51,12 +51,7 @@ const Dashboard: React.FC = () => {
         </div>
         
         <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center space-x-3">
-            <img
-              src={user?.avatar || `https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150`}
-              alt={user?.name}
-              className="w-10 h-10 rounded-full object-cover"
-            />
+          <div className="flex items-center space-x-2">
             <div>
               <p className="font-medium text-gray-900">{user?.name}</p>
               <p className="text-sm text-gray-500 capitalize">{user?.role}</p>

@@ -5,7 +5,7 @@ class ProjectMembersService {
   private apiClient: ApiClient;
 
   constructor() {
-    this.apiClient = new ApiClient('http://localhost:3000/api/v1/project-members');
+    this.apiClient = new ApiClient('https://backend.nlh.cl/api/v1/project-members');
   }
 
   async addMember(projectId: number, userId: number, role: string): Promise<ProjectMember> {

@@ -14,6 +14,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { login } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -117,10 +118,15 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                   <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded" />
                   <span className="ml-2 text-gray-600">Recordar</span>
                 </label>
-                <a href="#" className="text-blue-600 hover:underline">Olvidaste tu contraseña?</a>
+                <a href="#" onClick={() => setShowForgotPassword(true)} className="text-blue-600 hover:underline">Olvidaste tu contraseña?</a>
               </div>
           </div>
         </div>
+        {showForgotPassword && (
+          <div className="mt-4 p-4 bg-yellow-50 text-yellow-700 rounded-lg">
+            <p className="text-sm">{t('login.forgotPasswordMessage')}</p>
+          </div>
+        )}
       </div>
     </div>
   );

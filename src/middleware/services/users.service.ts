@@ -5,7 +5,7 @@ export default class UsersService {
   private apiClient: ApiClient;
 
   constructor() {
-    this.apiClient = new ApiClient('http://localhost:3000/api/v1/users');
+    this.apiClient = new ApiClient('https://backend.nlh.cl/api/v1/users');
   }
 
   async getUserById(userId: number): Promise<User> {
@@ -29,6 +29,12 @@ export default class UsersService {
 
   async createUser(userData: Omit<User, 'id' | 'created_at' | 'updated_at'>): Promise<User> {
     const response = await this.apiClient.post('/', userData);
+    return response.data;
+  }
+
+  async changePassword(userId: number, newPassword: string): Promise<User> {
+    console.log(`Changing password for user ID ${userId} to ${newPassword}`);
+    const response = await this.apiClient.put(`/password/${userId}`, { password: newPassword });
     return response.data;
   }
 

@@ -151,16 +151,34 @@ const ProjectDetails: React.FC = () => {
     { id: 'downloads', label: t('tab.download'), visible: true },
   ];
 
-  const tabsControl = [
+  const tabsPresupuesto = [
     { id: 'general', label: t('tab.general'), visible: true },
     { id: 'deadline', label: t('tab.deadline'), visible: true },
+    { id: 'files', label: t('tab.files'), visible: true },
+    { id: 'qa', label: t('tab.qa'), visible: false },
+    { id: 'downloads', label: t('tab.download'), visible: true },
+  ];
+
+  const tabsControl = [
+    { id: 'general', label: t('tab.general'), visible: true },
+    { id: 'deadline', label: t('tab.deadline'), visible: false },
     { id: 'files', label: t('tab.files'), visible: true },
     { id: 'qa', label: t('tab.qa'), visible: false },
     { id: 'downloads', label: t('tab.download'), visible: false },
   ];
 
   const selectTabs = (projectType: string) => {
-    return projectType === 'Control de Obras' ? tabsControl : tabs;
+    console.log('Selecting tabs for project type:', projectType);
+    switch (projectType) {
+      case 'Presupuesto':
+        return tabsPresupuesto;
+      case 'Almacenamiento':
+        return tabsControl;
+      case 'Control de Obra':
+        return tabsControl;
+      default:
+        return tabs;
+    }
   };
 
   if (isLoading) {
@@ -223,11 +241,6 @@ const ProjectDetails: React.FC = () => {
             </div>
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center space-x-3">
-                <img
-                  src={user?.avatar || `https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150`}
-                  alt={user?.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
                 <div>
                   <p className="font-medium text-gray-900">{user?.name}</p>
                   <p className="text-sm text-gray-500 capitalize">{user?.role}</p>
@@ -242,7 +255,7 @@ const ProjectDetails: React.FC = () => {
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8">
-            {selectTabs(project.type).filter(tab => tab.visible).map((tab) => (
+            {selectTabs(project.projectTypeName).filter(tab => tab.visible).map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
