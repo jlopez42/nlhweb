@@ -13,10 +13,6 @@ const FileViewer: React.FC<FileViewerProps> = ({ file, onClose }) => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const isAdmin = user?.role === 'administrator';
-  
-  // IGNORE BELOW - SUPABASE STORAGE LOGIC PLACEHOLDER
-  const data = null; // IGNORE
-  const error = null; // IGNORE
 
   useEffect(() => {
     loadFile();
@@ -24,13 +20,20 @@ const FileViewer: React.FC<FileViewerProps> = ({ file, onClose }) => {
 
   const loadFile = async () => {
     try {
-      // load file URL from Supabase Storage
-      /* const { data, error } = await supabase.storage
-        .from('files')
-        .createSignedUrl(file.file_path, 3600); */
+      const fileData = file.file_content?.data;
+      if (!fileData) {
+        throw new Error('No file content available');
+      }
 
-      if (error) throw error;
-      setFileUrl(data?.signedUrl);
+      const bytes =
+        fileData instanceof Uint8Array
+          ? fileData
+          : new Uint8Array(fileData as ArrayBufferLike);
+
+      const blob = new Blob([bytes], { type: file.mime_type });
+      const sourceURL = URL.createObjectURL(blob);
+
+      setFileUrl(sourceURL);
     } catch (error) {
       console.error('Error loading file:', error);
     } finally {
@@ -40,17 +43,21 @@ const FileViewer: React.FC<FileViewerProps> = ({ file, onClose }) => {
 
   const handleDownload = async () => {
     try {
-      // download file from Supabase Storage
-      /* const { data, error } = await supabase.storage
-        .from('files')
-        .download(file.file_path); */
+      const fileData = file.file_content?.data;
+      if (!fileData) {
+        throw new Error('No file content available');
+      }
 
-      if (error) throw error;
+      const bytes =
+        fileData instanceof Uint8Array
+          ? fileData
+          : new Uint8Array(fileData as ArrayBufferLike);
 
-      const url = URL.createObjectURL(data);
+      const blob = new Blob([bytes], { type: file.mime_type });
+      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = file.name;
+      a.download = file.filename || 'downloaded_file';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -73,7 +80,7 @@ const FileViewer: React.FC<FileViewerProps> = ({ file, onClose }) => {
           <div className="flex items-center gap-3">
             <FileText className="w-6 h-6 text-blue-500" />
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">{file.name}</h2>
+              <h2 className="text-xl font-semibold text-gray-900">{file.filename}</h2>
               <p className="text-sm text-gray-600">
                 {(file.file_size / 1024 / 1024).toFixed(2)} MB • {file.mime_type}
               </p>
@@ -108,7 +115,7 @@ const FileViewer: React.FC<FileViewerProps> = ({ file, onClose }) => {
               {isImage && (
                 <img
                   src={fileUrl}
-                  alt={file.name}
+                  alt={file.filename}
                   className="max-w-full h-auto mx-auto rounded"
                 />
               )}
@@ -117,7 +124,7 @@ const FileViewer: React.FC<FileViewerProps> = ({ file, onClose }) => {
                 <iframe
                   src={fileUrl}
                   className="w-full h-[600px] border-0 rounded"
-                  title={file.name}
+                  title={file.filename}
                 />
               )}
 

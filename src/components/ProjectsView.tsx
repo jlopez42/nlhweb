@@ -45,7 +45,6 @@ const ProjectsView: React.FC = () => {
   };
 
   const handleEditProject = (project: Project) => {
-    console.log("Editing project:", project);
     setEditingProject(project);
     setIsModalOpen(true);
   };

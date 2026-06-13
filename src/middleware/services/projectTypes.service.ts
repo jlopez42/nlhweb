@@ -11,7 +11,6 @@ class ProjectTypesService {
   async getAllProjectTypes(): Promise<ProjectType[]> {
     const response = { data: [] as ProjectType[] };
     response.data = await this.apiClient.get('/project-types');
-    console.log("API response for project types:", response.data);
     return response.data;
   }
 

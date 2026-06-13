@@ -10,13 +10,11 @@ class ProjectsService {
 
   async createProject(project: Omit<Project, 'id' | 'created_at' | 'updated_at'>): Promise<Project> {
     const response = await this.apiClient.post('/projects', project);
-    console.log('API response for creating project:', response);
     return response;
   }
 
   async updateProject(projectId: string, project: Partial<Omit<Project, 'id' | 'created_at' | 'updated_at'>>): Promise<Project> {
     const response = await this.apiClient.put(`/projects/${projectId}`, project);
-    console.log('API response for updating project:', response);
     return response.data;
   }
 
