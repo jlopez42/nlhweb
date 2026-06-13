@@ -19,13 +19,11 @@ class ProjectMembersService {
 
   async getMembers(projectId: number): Promise<ProjectMember[]> {
     const response = await this.apiClient.get(`/project/${projectId}/members`);
-    console.log('ProjectMembersService.getMembers response:', response);
     return response;
   }
 
   async getAllMembers(): Promise<ProjectMember[]> {
     const response = await this.apiClient.get(`/`);
-    console.log('ProjectMembersService.getAllMembers response:', response);
     return response;
   }
 }

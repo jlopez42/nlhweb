@@ -20,7 +20,6 @@ export const projectService = {
 
   // Get projects by user ID
   getProjectsByUserId: async (userId: string): Promise<Project[]> => {
-    console.log('Getting projects for user ID:', userId);
     return new Promise((resolve) => {
       setTimeout(() => {
         const userProjects = mockProjects.filter(p => p.userId == userId);
@@ -31,7 +30,6 @@ export const projectService = {
 
   // Get project by ID
   getProjectById: async (id: string) => {
-    console.log('Fetching project with ID:', id);
     return new Promise((resolve) => {
       setTimeout(async () => {
         const response = await new ProjectsService().getProject(id);
@@ -42,11 +40,9 @@ export const projectService = {
 
   // Create new project
   createProject: async (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<Project> => {
-    console.log('Creating new project with data:', projectData);
     return new Promise((resolve) => {
       setTimeout(async () => {
         const project = await new ProjectsService().createProject(projectData);
-        console.log('Created project:', project);
         resolve(project);
       }, 600);
     });
@@ -54,11 +50,9 @@ export const projectService = {
 
   // Update project
   updateProject: async (id: string, updates: Partial<Project>): Promise<Project | null> => {
-    console.log('Updating project ID:', id, 'with updates:', updates);
     return new Promise((resolve) => {
       setTimeout(async () => {
         const project = await new ProjectsService().updateProject(id, updates);
-        console.log('Updated project:', project);
         resolve(project || null);
       }, 600);
     });
@@ -68,7 +62,7 @@ export const projectService = {
   deleteProject: async (id: string): Promise<boolean> => {
     return new Promise((resolve) => {
       setTimeout(async () => {
-        const project = await new ProjectsService().deleteProject(+id);
+        const project = await new ProjectsService().deleteProject(id);
         if (project !== null && project !== undefined) {  
           resolve(true);
         } else {
@@ -89,21 +83,13 @@ export const projectService = {
   },
 
   // Upload file
-  uploadFile: async (projectId: string, file: File, uploadedBy: string): Promise<ProjectFile> => {
+  uploadFile: async (newFile: ProjectFile, file: FormData, uploadedBy: string): Promise<ProjectFile> => {
     return new Promise((resolve) => {
-      setTimeout(() => {
-        const newFile: ProjectFile = {
-          id: Date.now().toString(),
-          projectId,
-          filename: file.name,
-          originalName: file.name,
-          size: file.size,
-          type: file.type,
-          uploadDate: new Date(),
-          uploadedBy
-        };
-        mockProjectFiles.push(newFile);
-        resolve(newFile);
+      setTimeout(async () => {
+        file.append("newFile", JSON.stringify(newFile));
+        file.append("uploadedBy", uploadedBy);
+        const fileUploaded = await new ProjectFilesService().uploadFile(String(newFile.projectId), file);
+        resolve(fileUploaded);
       }, 1000);
     });
   },
@@ -128,8 +114,7 @@ export const projectService = {
 
     return new Promise((resolve) => {
       setTimeout(async () => {
-        const projectFile = await new ProjectFilesService().uploadFile(+projectId, form);
-        console.log('Created project file:', projectFile);
+        const projectFile = await new ProjectFilesService().uploadFile(projectId, form);
         resolve(projectFile);   
       }, 600);
     });
@@ -205,8 +190,7 @@ export const projectService = {
   getCustomersByProjectId: async (projectId: string) => {
     return new Promise((resolve) => {
       setTimeout(async () => {
-        const response = await new ProjectMembersService().getMembers(+projectId);
-        console.log("Fetched project members (customers):", response);
+        const response = await new ProjectMembersService().getMembers(projectId);
         resolve(response);
       }, 500);
     });
@@ -216,7 +200,6 @@ export const projectService = {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const response = await new ProjectMembersService().getAllMembers();
-        console.log("Fetched all members:", response);
         resolve(response);
       }, 500);
     });
@@ -227,7 +210,6 @@ export const projectService = {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const options = await new ProjectTypesService().getAllProjectTypes();
-        console.log("Fetched project types:", options);
         resolve(options);
       }, 200);
     });
@@ -237,7 +219,6 @@ export const projectService = {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const response = await new UsersService().getAllUsers();
-        console.log("Fetched all users:", response);
         resolve(response);
       }, 500);
     });
@@ -248,7 +229,6 @@ export const projectService = {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const response = await new UsersService().createUser(userData);
-        console.log("Created user:", response);
         resolve(response);
       }, 500);
     });
@@ -258,7 +238,6 @@ export const projectService = {
     return new Promise((resolve) => {
       setTimeout(async () => {
         await new UsersService().deleteUser(userId);
-        console.log("Deleted user with ID:", userId);
         resolve();
       }, 300);
     });
@@ -268,7 +247,6 @@ export const projectService = {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const response = await new UsersService().updateUser(userId, userData);
-        console.log("Updated user:", response);
         resolve(response);
       }, 500);
     });
@@ -278,7 +256,6 @@ export const projectService = {
     return new Promise((resolve) => {
       setTimeout(async () => {
         const response = await new UsersService().getUserById(userId);
-        console.log("Fetched user by ID:", response);
         resolve(response);
       }, 500);
     });
@@ -289,11 +266,9 @@ export const projectService = {
     if (!userId) {
       throw new Error("User ID is required to update password");
     }
-    console.log(`Updating password for user ID: ${userId}`);
     return new Promise((resolve) => {
       setTimeout(async () => {
         const response = await new UsersService().changePassword(userId, newPassword);
-        console.log("Updated user password:", response);
         resolve(response);
       }, 500);
     });

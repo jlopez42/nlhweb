@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, MapPin, User, FileText, MessageSquare, Download, Upload, Trash2, Send, Loader2 } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, FileText, MessageSquare, Download, Upload, Trash2, Send, Loader2 } from 'lucide-react';
 import { Manager, Project, ProjectConfig, ProjectFile, Question } from '../types';
 import { projectService } from '../services/projectService';
 import { useAuth } from '../contexts/AuthContext';
@@ -41,7 +41,6 @@ const ProjectDetails: React.FC = () => {
       const [projectData] = await Promise.all([
         projectService.getProjectById(id),
       ]);
-      console.log('Loaded project data:', projectData);
       setProject(projectData.project);
       setProfessionals(projectData.professionals || []);
       setSpecialists(projectData.specialists || []);
@@ -57,6 +56,7 @@ const ProjectDetails: React.FC = () => {
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
+    console.log('Selected files for upload:', selectedFiles);
     if (!selectedFiles || !id || !user) return;
 
     setIsUploading(true);
@@ -140,9 +140,6 @@ const ProjectDetails: React.FC = () => {
     }).format(new Date(date));
   };
 
-  const canEditGeneral = user?.role === 'administrador';
-  const canEditDeadline = user?.role === 'administrador';
-
   const tabs = [
     { id: 'general', label: t('tab.general'), visible: true },
     { id: 'deadline', label: t('tab.deadline'), visible: true },
@@ -161,7 +158,7 @@ const ProjectDetails: React.FC = () => {
 
   const tabsControl = [
     { id: 'general', label: t('tab.general'), visible: true },
-    { id: 'deadline', label: t('tab.deadline'), visible: false },
+    { id: 'deadline', label: t('tab.deadline'), visible: true },
     { id: 'files', label: t('tab.files'), visible: true },
     { id: 'qa', label: t('tab.qa'), visible: false },
     { id: 'downloads', label: t('tab.download'), visible: false },
@@ -428,7 +425,7 @@ const ProjectDetails: React.FC = () => {
                   </div>
                 </div>
               </div>
-              
+              {(project.projectTypeName !== 'Control de Obra' && project.projectTypeName !== 'Almacenamiento') && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('project.deadline.limits')}</h3>
                 <div className="space-y-4">
@@ -446,6 +443,7 @@ const ProjectDetails: React.FC = () => {
                   </div>
                 </div>
               </div>
+              )}
             </div>
           </div>
         )}
@@ -534,7 +532,7 @@ const ProjectDetails: React.FC = () => {
                       <div className="bg-white rounded-lg p-6 max-w-md w-full">
                         <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('dashboard.projects.delete.title')}</h3>
                         <p className="text-gray-600 mb-6">
-                          {t('project.setting.user.delete.confirmation')}
+                          {t('project.files.delete.confirmation')}
                         </p>
                         <div className="flex justify-end space-x-3">
                           <button

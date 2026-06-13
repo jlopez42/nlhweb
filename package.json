@@ -2,7 +2,7 @@
   "name": "nlh-app",
   "homepage": "https://www.nlh.cl/",
   "private": true,
-  "version": "1.0.7",
+  "version": "1.0.8",
   "type": "module",
   "scripts": {
     "dev": "vite",

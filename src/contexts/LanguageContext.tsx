@@ -191,6 +191,7 @@ const translations = {
     'project.files.table.action': 'Action',
 
     'project.files.message': 'ready to be associated with this project',
+    'project.files.delete.confirmation': 'Are you sure you want to delete this file? This action cannot be undone.',
 
     // Project Button
     'project.button.save': 'Save Project',
@@ -504,7 +505,8 @@ const translations = {
     'project.files.table.size': 'Tamaño',
     'project.files.table.action': 'Acción',
 
-    'project.files.message': 'Listo para asociarse con este proyectot',
+    'project.files.message': 'Listo para asociarse con este proyecto',
+    'project.files.delete.confirmation': '¿Está seguro de que desea eliminar este archivo? Esta acción no se puede deshacer.',
 
     // Project Button
     'project.button.save': 'Guardar Proyecto',

@@ -16,8 +16,9 @@ class ApiClient {
     return response.data;
   }
 
-  public async post<T>(url: string, data: any): Promise<T> {
-    const response = await this.axiosInstance.post<T>(url, data);
+  public async post<T>(url: string, data: any, headers?: any): Promise<T> {
+    const config = headers ? headers : undefined;
+    const response = await this.axiosInstance.post<T>(url, data, config);
     return response.data;
   }
 

@@ -65,7 +65,6 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         const [projectData] = await Promise.all([
           projectService.getProjectById(project.id),
         ]);
-        console.log("Fetched project data:", projectData);
         setFormData({
           title: project.title,
           description: project.description,
@@ -211,7 +210,9 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    event.preventDefault();
     const selectedFiles = event.target.files;
+    console.log("Selected files for upload:", selectedFiles);
     if (!selectedFiles || !user) return;
 
     setIsUploading(true);
@@ -264,6 +265,22 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
 
       setUploadedFiles((prev) => [...prev, ...newFiles]);
 
+      if (newFiles.length > 0) {
+        const fileToUpload = newFiles[0];
+        const rawFileContent = fileToUpload.file_content as any;
+        const fileBlob = rawFileContent instanceof Blob
+          ? rawFileContent
+          : new Blob([rawFileContent.data ?? rawFileContent], {
+              type: fileToUpload.mime_type || "application/octet-stream",
+            });
+
+        const formData = new FormData();
+        formData.append("projectFile", fileBlob, fileToUpload.originalName);
+        formData.append("project_id", String(fileToUpload.projectId));
+
+        await projectService.uploadFile(fileToUpload, formData, user.name);
+      }
+
       // Clear the input
       event.target.value = "";
     } catch (error) {
@@ -276,7 +293,6 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
 
   const handleDownload = async (file: ProjectFile) => {
     try {
-      
       const url = URL.createObjectURL(file.file_content.data ? new Blob([file.file_content.data], { type: file.mime_type || 'application/octet-stream' }) : file.file_content);
       const a = document.createElement('a');
       a.href = url;
@@ -336,7 +352,6 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      console.log("Professionals before submit:", formData.professionals);
       const projectData = {
         ...formData,
         professionals: formData.professionals.filter((p) => p.name.trim() !== ""),
@@ -347,13 +362,11 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
 
       let savedProject: Project;
       if (project) {
-        console.log('Data del Editar Proyecto ========================= ', projectData);
         savedProject = (await projectService.updateProject(
           project.id,
           projectData
         )) as Project;
       } else {
-        console.log('Data del Nuevo Proyecto ', projectData);
         savedProject = await projectService.createProject(projectData);
       }
 
@@ -380,7 +393,6 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   };
 
   const addProfessional = () => {
-    console.log("Adding professional. Current professionals:", formData.professionals);
     setFormData((prev) => ({
       ...prev,
       professionals: [...prev.professionals, {name: ""}],
@@ -1096,6 +1108,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
               </div>
 
               {/* Limits Section */}
+              {formData.type !== "Control de Obra" && formData.type !== "Almacenamiento" && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   {t("project.deadline.limits")}
@@ -1199,6 +1212,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                   </div>
                 </div>
               </div>
+              )}
             </div>
           )}
 

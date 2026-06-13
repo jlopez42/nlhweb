@@ -26,7 +26,6 @@ const ProjectsView: React.FC = () => {
     
     setIsLoading(true);
     try {
-      console.log("Loading projects for user:", user.role === 'administrador' ? 'all projects' : `user ID ${user.id}`);
       const data = user.role === 'administrador' 
         ? await projectService.getProjects()
         : await projectService.getProjectsByUserId(user.id);

@@ -8,18 +8,21 @@ class ProjectFilesService {
     this.apiClient = new ApiClient('https://backend.nlh.cl/api/v1/project-files');
   }
 
-  async uploadFile(projectId: number, formData: FormData): Promise<ProjectFile> {
-    const response = await this.apiClient.post(`/${projectId}/files`, formData);
-    console.log('ProjectFilesService.uploadFile response:', response);
+  async uploadFile(projectId: string, formData: FormData): Promise<ProjectFile> {
+    const response = await this.apiClient.post(`/${projectId}/files`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return response;
   }
 
-  async getFilesByProjectId(projectId: number): Promise<ProjectFile[]> {
+  async getFilesByProjectId(projectId: string): Promise<ProjectFile[]> {
     const response = await this.apiClient.get(`/${projectId}/files`);
     return response.data;
   }
 
-  async deleteFile(fileId: number): Promise<void> {
+  async deleteFile(fileId: string): Promise<void> {
     await this.apiClient.delete(`/files/${fileId}`);
   }
 }
