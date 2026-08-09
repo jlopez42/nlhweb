@@ -26,6 +26,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   const [activeTab, setActiveTab] = useState<"general" | "deadline" | "files" | "qa" | "downloads">("general");
   const [uploadedFiles, setUploadedFiles] = useState<ProjectFile[]>([]);
   const [selectedFile, setSelectedFile] = useState<ProjectFile | null>(null);
+  const [enabledUpload, setEnabledUpload] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -58,8 +59,19 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
     status: "pending" as const,
     userId: user?.id || "",
   });
+  // 3. UI STATE
+  const [isAccordionDetailsOpen, setIsAccordionDetailsOpen] = useState(false);
+  const [isAccordionResponsableOpen, setIsAccordionResponsableOpen] = useState(false);
+  const [isAccordionCustomerOpen, setIsAccordionCustomerOpen] = useState(false);
+  const [isAccordionAdditionalOpen, setIsAccordionAdditionalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
+    setIsAccordionDetailsOpen(false);
+    setIsAccordionResponsableOpen(false);
+    setIsAccordionCustomerOpen(false);
+    setIsAccordionAdditionalOpen(false);
+    setSearchTerm('');
     if (project) {
       const fetchProjectData = async () => {
         const [projectData] = await Promise.all([
@@ -137,9 +149,11 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         userId: user?.id || "",
       });
       setUploadedFiles([]);
+      loadProjectFiles([]);
+      setAssociatedCustomers([]);
     }
   }, [project, user]);
-  const [isAdministrator] = useState(user?.role === "administrator");
+  const [isAdministrator] = useState(user?.role === "administrador");
 
   // 1. PROJECT FORM STATE
   const [projectDetails, setProjectDetails] = useState({
@@ -164,8 +178,18 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   useEffect(() => {
     const loadMeta = async () => {
       try {
+        let customersPromise; 
         const typesPromise = projectService.getProjectTypes?.() ?? Promise.resolve([]);
-        const customersPromise = projectService.getCustomers();
+        if (project) {
+          // customersPromise = projectService.getCustomers();
+          const allUsersPromise = projectService.getAllUsers(user?.id).then(users => users || []);
+          customersPromise = allUsersPromise.then(users => {
+            // Process the users data as needed
+            return users.filter(user => !associatedCustomers.includes(user.id)); 
+          });
+        } else {
+          customersPromise = projectService.getAllUsers(user?.id).then(users => users || []);
+        }
         const [types, customers] = await Promise.all([typesPromise, customersPromise]);
         setProjectTypes(Array.isArray(types) ? types.map((t) => typeof t === 'string' ? { id: 0, title: t } : t) : []);
         setAvailableCustomers(Array.isArray(customers) ? customers : []);
@@ -176,12 +200,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
     loadMeta();
   }, [project]);
 
-   // 3. UI STATE
-   const [isAccordionDetailsOpen, setIsAccordionDetailsOpen] = useState(false);
-   const [isAccordionResponsableOpen, setIsAccordionResponsableOpen] = useState(false);
-   const [isAccordionCustomerOpen, setIsAccordionCustomerOpen] = useState(false);
-   const [isAccordionAdditionalOpen, setIsAccordionAdditionalOpen] = useState(false);
-   const [searchTerm, setSearchTerm] = useState('');
+   
  
    // 4. LOGIC
    const associateCustomer = (customer) => {
@@ -212,7 +231,6 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   ) => {
     event.preventDefault();
     const selectedFiles = event.target.files;
-    console.log("Selected files for upload:", selectedFiles);
     if (!selectedFiles || !user) return;
 
     setIsUploading(true);
@@ -279,13 +297,18 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         formData.append("project_id", String(fileToUpload.projectId));
 
         await projectService.uploadFile(fileToUpload, formData, user.name);
+        const [projectDataFile] = await Promise.all([
+          projectService.getProjectById(project.id),
+        ]);
+        setUploadedFiles(projectDataFile.files ?? []);
       }
 
       // Clear the input
       event.target.value = "";
     } catch (error) {
       console.error("Error uploading files:", error);
-      alert("Error uploading files. Please try again.");
+      setEnabledUpload(true);
+      setUploadedFiles([]);
     } finally {
       setIsUploading(false);
     }
@@ -517,7 +540,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                             title: e.target.value,
                           }))
                         }
-                        placeholder={t("project.general.namePlaceholder")}
+                        placeholder={t("project.general.title.placeholder")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         required
                       />
@@ -535,7 +558,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                             location: e.target.value,
                           }))
                         }
-                        placeholder={t("project.general.locationPlaceholder")}
+                        placeholder={t("project.general.location.placeholder")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         required
                       />
@@ -552,7 +575,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                             description: e.target.value,
                           }))
                         }
-                        placeholder={t("project.general.descriptionPlaceholder")}
+                        placeholder={t("project.general.description.placeholder")}
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         required
@@ -1365,6 +1388,26 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                       {uploadedFiles.length !== 1 ? "s" : ""}{" "}
                       {t("project.files.message")}
                     </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Enable Upload Files */}
+              {enabledUpload && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                  <div className="bg-white rounded-lg p-6 max-w-md w-full">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('project.files.upload.disabled.title')}</h3>
+                    <p className="text-gray-600 mb-6">
+                      {t('project.files.upload.disabled')}
+                    </p>
+                    <div className="flex justify-end space-x-3">
+                      <button
+                        onClick={() => setEnabledUpload(false)}
+                        className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                      >
+                        {t('common.close')}
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}

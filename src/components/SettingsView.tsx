@@ -6,7 +6,6 @@ import { User, UserRole } from '../types';
 import { projectService } from '../services/projectService';
 const SettingsView: React.FC = () => {
   const { user } = useAuth();
-  console.log('Current User in SettingsView:', user);
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'users' | 'templates' | 'backup'>('users');
   const [users, setUsers] = useState<User[]>([]);
@@ -30,7 +29,7 @@ const SettingsView: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const data = await projectService.getAllUsers();
+      const data = await projectService.getAllUsers(-1);
       setUsers(data);
     } catch (error) {
       console.error('Error loading users:', error);
@@ -49,10 +48,8 @@ const SettingsView: React.FC = () => {
   };
 
   const handleCreateUser = async () => {
-    console.log('Creating user with data:', newUser);
     try {
       const data = await projectService.createUser(newUser);
-      console.log('User created successfully:', data);
       setIsUserModalOpen(false);
       setNewUser({ username: '', password: '', name: '', email: '', role: 'cliente' });
       loadUsers();
@@ -62,10 +59,8 @@ const SettingsView: React.FC = () => {
   };
 
   const handleDeleteUser = (userId: string) => {
-    console.log('Attempting to delete user with ID:', userId);
      projectService.deleteUser(Number(userId))
       .then(() => {
-        console.log('User deleted successfully');
         loadUsers();
         setDeleteConfirm(null);
       });
@@ -73,10 +68,8 @@ const SettingsView: React.FC = () => {
 
   const handleUpdateUser = async () => {
     if (!editingUser) return;
-    console.log('Updating user with data:', editingUser);
     try {
       const data = await projectService.updateUser(editingUser.id, editingUser);
-      console.log('User updated successfully:', data);
       setIsUserModalOpen(false);
       setEditingUser(null);
       loadUsers();

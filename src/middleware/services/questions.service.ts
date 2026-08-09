@@ -18,8 +18,8 @@ class QuestionsService {
     return response.data;
   }
 
-  async respondToQuestion(questionId: number, response: string): Promise<Question> {
-    const response = await this.apiClient.put(`/questions/${questionId}/response`, { response });
+  async respondToQuestion(questionId: number, answer: string): Promise<Question> {
+    const response = await this.apiClient.put(`/questions/${questionId}/response`, { answer });
     return response.data;
   }
 }

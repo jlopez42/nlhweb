@@ -18,8 +18,8 @@ export default class UsersService {
     return response.data;
   }
 
-  async getAllUsers(): Promise<User[]> {
-    const response = await this.apiClient.get('/');
+  async getAllUsers(userId: number): Promise<User[]> {
+    const response = await this.apiClient.get(`/all/${userId}`);
     return response;
   }
 
@@ -33,7 +33,6 @@ export default class UsersService {
   }
 
   async changePassword(userId: number, newPassword: string): Promise<User> {
-    console.log(`Changing password for user ID ${userId} to ${newPassword}`);
     const response = await this.apiClient.put(`/password/${userId}`, { password: newPassword });
     return response.data;
   }

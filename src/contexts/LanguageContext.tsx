@@ -120,6 +120,10 @@ const translations = {
     'project.general.name': 'Title',
     'project.general.location': 'Location',
     'project.general.description': 'Description',
+    'project.general.title.placeholder': 'Brief description of the project',
+    'project.general.location.placeholder': 'City, Region, etc.',
+    'project.general.description.placeholder': 'Detailed description of the project, including key objectives, scope, and any relevant information that provides a clear overview of the project\'s purpose and requirements.',
+
     
     // Project Detail Section
     'project.detail.title': 'Project Details',
@@ -192,6 +196,8 @@ const translations = {
 
     'project.files.message': 'ready to be associated with this project',
     'project.files.delete.confirmation': 'Are you sure you want to delete this file? This action cannot be undone.',
+    'project.files.upload.disabled': 'You need to save the project before uploading files. Please save the project first.',
+    'project.files.upload.disabled.title': 'File Upload Disabled',
 
     // Project Button
     'project.button.save': 'Save Project',
@@ -271,7 +277,7 @@ const translations = {
     'project.setting.user.create': 'Create User',
     'project.setting.user.name': 'Name',
     'project.setting.user.email': 'Email',
-    'project.setting.user.username': 'Company',
+    'project.setting.user.username': 'Username',
     'project.setting.user.password': 'Password',
     
     'project.setting.user.role': 'Role',
@@ -282,7 +288,7 @@ const translations = {
 
     'project.setting.user.table.user': 'User',
     'project.setting.user.table.role': 'Role',
-    'project.setting.user.table.username': 'Name',
+    'project.setting.user.table.username': 'Username',
     'project.setting.user.table.actions': 'Actions',
     'project.setting.user.delete.confirmation': 'Are you sure you want to delete this user? This action cannot be undone.',
 
@@ -435,6 +441,9 @@ const translations = {
     'project.general.name': 'Titulo',
     'project.general.location': 'Localización',
     'project.general.description': 'Descripción',
+    'project.general.title.placeholder': 'Breve descripción del proyecto',
+    'project.general.location.placeholder': 'Ciudad, Región, etc.',
+    'project.general.description.placeholder': 'Descripción detallada del proyecto, incluyendo los objetivos clave, alcance y cualquier información relevante que brinde una visión clara del propósito y requerimientos del proyecto.',
     
     // Project Detail Section
     'project.detail.title': 'Detalle Proyecto',
@@ -507,6 +516,8 @@ const translations = {
 
     'project.files.message': 'Listo para asociarse con este proyecto',
     'project.files.delete.confirmation': '¿Está seguro de que desea eliminar este archivo? Esta acción no se puede deshacer.',
+    'project.files.upload.disabled': 'Es necesario guardar el proyecto antes de subir archivos. Por favor, guarde el proyecto primero.',
+    'project.files.upload.disabled.title': 'Carga de archivos deshabilitada',
 
     // Project Button
     'project.button.save': 'Guardar Proyecto',
@@ -585,7 +596,7 @@ const translations = {
     'project.setting.user.create': 'Nuevo usuario',
     'project.setting.user.name': 'Nombre',
     'project.setting.user.email': 'Email',
-    'project.setting.user.username': 'Nombre de Empresa',
+    'project.setting.user.username': 'Usuario',
     'project.setting.user.password': 'Contraseña',
     
     'project.setting.user.role': 'Rol',

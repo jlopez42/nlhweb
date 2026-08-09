@@ -43,7 +43,6 @@ const ProfileView: React.FC = () => {
     // Simulate API call
     setTimeout(async () => {
       const data = await projectService.updatePassword(user?.id, passwords.new);
-      console.log('Password updated successfully:', data);
       setMessage(t('project.password.success'));
       setPasswords({ current: '', new: '', confirm: '' });
       setIsLoading(false);

@@ -25,8 +25,6 @@ const Dashboard: React.FC = () => {
   ];
 
   const renderContent = () => {
-    console.log('Rendering content for section:', activeSection);
-    console.log('Current user role:', user?.role);
     switch (activeSection) {
       case 'projects':
         return <ProjectsView />;

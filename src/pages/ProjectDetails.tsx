@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, MapPin, FileText, MessageSquare, Download, Upload, Trash2, Send, Loader2 } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, FileText, MessageSquare, Download, Upload, Trash2, Send, Loader2, Eye } from 'lucide-react';
 import { Manager, Project, ProjectConfig, ProjectFile, Question } from '../types';
 import { projectService } from '../services/projectService';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext'
+import FileViewer from '../components/FileViewer';
 
 const ProjectDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,6 +27,7 @@ const ProjectDetails: React.FC = () => {
   });
   const [isUploading, setIsUploading] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<ProjectFile | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -56,7 +58,6 @@ const ProjectDetails: React.FC = () => {
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
-    console.log('Selected files for upload:', selectedFiles);
     if (!selectedFiles || !id || !user) return;
 
     setIsUploading(true);
@@ -83,6 +84,33 @@ const ProjectDetails: React.FC = () => {
       console.error('Error deleting file:', error);
     }
   };
+
+   const handleDownload = async (file: ProjectFile) => {
+      try {
+        const blobContent =
+          file.file_content instanceof Blob
+            ? file.file_content
+            : file.file_content instanceof Uint8Array
+              ? new Uint8Array(file.file_content)
+              : ((file.file_content as { data?: BlobPart }).data ?? file.file_content) as BlobPart;
+
+        const blob = new Blob([blobContent as BlobPart], {
+          type: file.mime_type || 'application/octet-stream'
+        });
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.originalName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Error downloading file:', error);
+        alert('Failed to download file');
+      }
+    };
 
   const handleSubmitQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,6 +150,7 @@ const ProjectDetails: React.FC = () => {
   };
 
   const formatDateGeneral = (date: Date) => {
+    if (!date) return 'Limite no definido';
     return new Intl.DateTimeFormat('es-ES', {
       year: 'numeric',
       month: 'short',
@@ -130,6 +159,7 @@ const ProjectDetails: React.FC = () => {
   };
 
   const formatDate = (date: Date) => {
+    if (!date) return 'Limite no definido';
     return new Intl.DateTimeFormat('es-ES', {
       year: 'numeric',
       month: 'short',
@@ -165,7 +195,6 @@ const ProjectDetails: React.FC = () => {
   ];
 
   const selectTabs = (projectType: string) => {
-    console.log('Selecting tabs for project type:', projectType);
     switch (projectType) {
       case 'Presupuesto':
         return tabsPresupuesto;
@@ -413,15 +442,15 @@ const ProjectDetails: React.FC = () => {
                 <div className="space-y-4">
                   <div>
                     <label className="text-sm font-medium text-gray-500">{t('project.deadline.publication')}</label>
-                    <p className="text-gray-900">{formatDate(deadline.publicationDate)}</p>
+                    <p className="text-gray-900">{formatDate(deadline?.publicationDate)}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">{t('project.deadline.start')}</label>
-                    <p className="text-gray-900">{formatDate(deadline.startDate)}</p>
+                    <p className="text-gray-900">{formatDate(deadline?.startDate)}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">{t('project.deadline.end')}</label>
-                    <p className="text-gray-900">{formatDate(deadline.finishDate)}</p>
+                    <p className="text-gray-900">{formatDate(deadline?.finishDate)}</p>
                   </div>
                 </div>
               </div>
@@ -431,15 +460,15 @@ const ProjectDetails: React.FC = () => {
                 <div className="space-y-4">
                   <div>
                     <label className="text-sm font-medium text-gray-500">{t('project.deadline.offers')}</label>
-                    <p className="text-gray-900">{formatDate(deadline.offersLimit)}</p>
+                    <p className="text-gray-900">{formatDate(deadline?.offersLimit)}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">{t('project.deadline.ask')}</label>
-                    <p className="text-gray-900">{formatDate(deadline.asksLimit)}</p>
+                    <p className="text-gray-900">{formatDate(deadline?.asksLimit)}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">{t('project.deadline.response')}</label>
-                    <p className="text-gray-900">{formatDate(deadline.responseLimit)}</p>
+                    <p className="text-gray-900">{formatDate(deadline?.responseLimit)}</p>
                   </div>
                 </div>
               </div>
@@ -452,18 +481,9 @@ const ProjectDetails: React.FC = () => {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-semibold text-gray-900">{t('project.files.title')}</h3>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleFileUpload}
-                  className="hidden"
-                  id="file-upload"
-                  accept=".pdf,.doc,.docx,.dwg,.jpg,.jpeg,.png"
-                />
+              <div className="flex items-center space-x-2 ">
                 <label
-                  htmlFor="file-upload"
-                  className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-2 rounded-lg font-medium hover:from-blue-700 hover:to-cyan-600 transition-all cursor-pointer flex items-center space-x-2"
+                  className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-2 rounded-lg font-medium hover:from-blue-700 hover:to-cyan-600 transition-all cursor-pointer flex items-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   <Upload className="h-4 w-4" />
                   <span>{t('project.files.upload')}</span>
@@ -509,17 +529,30 @@ const ProjectDetails: React.FC = () => {
                           {formatDate(file.uploadDate)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {formatDate(file.uploadedBy)}
+                          {file.uploadedBy}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {formatFileSize(file.file_size)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <button
+                            onClick={() => setSelectedFile(file)}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                            title="View">
+                            <Eye className="w-5 h-5" />
+                          </button>
+                          <button
                             onClick={() => setDeleteConfirm(file.id)}
                             className="text-red-600 hover:text-red-900"
                           >
                             <Trash2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDownload(file)}
+                            className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
+                            title="Download"
+                          >
+                            <Download className="w-5 h-5" />
                           </button>
                         </td>
                       </tr>
@@ -550,6 +583,12 @@ const ProjectDetails: React.FC = () => {
                         </div>
                       </div>
                     </div>
+                  )}
+                  {/* File Preview Modal */}
+                  {selectedFile && (
+                    <FileViewer
+                      file={selectedFile}
+                      onClose={() => setSelectedFile(null)}/>
                   )}
               </div>
             )}

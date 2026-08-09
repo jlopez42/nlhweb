@@ -4,6 +4,7 @@ import ProjectsService from '../middleware/services/projects.service';
 import ProjectTypesService from '../middleware/services/projectTypes.service';
 import ProjectMembersService from '../middleware/services/projectMembers.service';
 import ProjectFilesService from '../middleware/services/projectFiles.service';
+import ProjectQuestionsService from '../middleware/services/questions.service';
 import UsersService from '../middleware/services/users.service';
 import { util } from '../common';
 
@@ -21,7 +22,7 @@ export const projectService = {
   // Get projects by user ID
   getProjectsByUserId: async (userId: string): Promise<Project[]> => {
     return new Promise((resolve) => {
-      setTimeout(() => {
+      setTimeout(async () => {
         const userProjects = mockProjects.filter(p => p.userId == userId);
         resolve(userProjects);
       }, 500);
@@ -75,7 +76,7 @@ export const projectService = {
   // Get project files
   getProjectFiles: async (projectId: string): Promise<ProjectFile[]> => {
     return new Promise((resolve) => {
-      setTimeout(() => {
+      setTimeout(async () => {
         const files = mockProjectFiles.filter(f => f.projectId === projectId);
         resolve(files);
       }, 300);
@@ -84,12 +85,16 @@ export const projectService = {
 
   // Upload file
   uploadFile: async (newFile: ProjectFile, file: FormData, uploadedBy: string): Promise<ProjectFile> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       setTimeout(async () => {
-        file.append("newFile", JSON.stringify(newFile));
-        file.append("uploadedBy", uploadedBy);
-        const fileUploaded = await new ProjectFilesService().uploadFile(String(newFile.projectId), file);
-        resolve(fileUploaded);
+        try {
+          file.append("newFile", JSON.stringify(newFile));
+          file.append("uploadedBy", uploadedBy);
+          const fileUploaded = await new ProjectFilesService().uploadFile(String(newFile.projectId), file);
+          resolve(fileUploaded);
+        } catch (error) {
+          reject(error);
+        }
       }, 1000);
     });
   },
@@ -123,23 +128,18 @@ export const projectService = {
   // Delete file
   deleteFile: async (fileId: string): Promise<boolean> => {
     return new Promise((resolve) => {
-      setTimeout(() => {
-        const index = mockProjectFiles.findIndex(f => f.id === fileId);
-        if (index !== -1) {
-          mockProjectFiles.splice(index, 1);
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      }, 300);
+      setTimeout(async () => {
+        const fileToDelete = await new ProjectFilesService().deleteFile(fileId);
+        resolve(fileToDelete);
+      }, 300);  
     });
   },
 
   // Get project questions
   getProjectQuestions: async (projectId: string): Promise<Question[]> => {
     return new Promise((resolve) => {
-      setTimeout(() => {
-        const questions = mockQuestionsSpanish.filter(q => q.projectId === projectId);
+      setTimeout(async () => {
+        const questions = await new ProjectQuestionsService().getQuestions(projectId);
         resolve(questions);
       }, 400);
     });
@@ -148,7 +148,7 @@ export const projectService = {
   // Add question
   addQuestion: async (questionData: Omit<Question, 'id' | 'askedAt'>): Promise<Question> => {
     return new Promise((resolve) => {
-      setTimeout(() => {
+      setTimeout(async () => {
         const newQuestion: Question = {
           ...questionData,
           id: Date.now().toString(),
@@ -163,7 +163,7 @@ export const projectService = {
   // Respond to question
   respondToQuestion: async (questionId: string, response: string, respondedBy: string): Promise<Question | null> => {
     return new Promise((resolve) => {
-      setTimeout(() => {
+      setTimeout(async () => {
         const index = mockQuestionsSpanish.findIndex(q => q.id === questionId);
         if (index !== -1) {
           mockQuestionsSpanish[index] = {
@@ -215,10 +215,10 @@ export const projectService = {
     });
   },
   
-  getAllUsers: async () => {
+  getAllUsers: async (userId: number) => {
     return new Promise((resolve) => {
       setTimeout(async () => {
-        const response = await new UsersService().getAllUsers();
+        const response = await new UsersService().getAllUsers(userId? userId : -1);
         resolve(response);
       }, 500);
     });

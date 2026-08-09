@@ -23,7 +23,7 @@ class ProjectFilesService {
   }
 
   async deleteFile(fileId: string): Promise<void> {
-    await this.apiClient.delete(`/files/${fileId}`);
+    await this.apiClient.delete(`/${fileId}`);
   }
 }
 

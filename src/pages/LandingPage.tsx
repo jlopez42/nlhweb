@@ -65,7 +65,6 @@ const [currentIndex, setCurrentIndex] = useState(0);
 const handleContactSubmit = (e: React.FormEvent) => {
   e.preventDefault();
   // Handle contact form submission
-  console.log('Contact form submitted:', contactForm);
   setContactForm({ subject: '', message: '' });
   alert('Thank you for your message! We will get back to you soon.');
 };
